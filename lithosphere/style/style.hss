@@ -1,0 +1,139 @@
+Root{
+    font: name(Bitstream Vera Sans) 10pt rgb(0.95 0.95 0.95) bold;
+    color: rgb(1.0 1.0 1.0 1.0);
+}
+
+Row, Column{
+    align: center middle;
+    spacing: 10px;
+}
+
+Button{
+    background: file(images/button.png) patch;
+    padding: 5px 5px 5px 5px;
+}
+
+Button:hover{
+    background: file(images/button_hover.png) patch;
+}
+
+Button:pressed{
+    background: file(images/button_pressed.png) patch;
+}
+
+Button > Label{
+    font: name(Bitstream Vera Sans) 10pt rgb(0.0 0.0 0.0) bold;
+    align: center middle;
+}
+
+Slider{
+    width: 100px;
+    height: 8px;
+    background: file(images/slider_background.png) patch;
+}
+
+Slider:focus{
+    background: file(images/slider_background_focus.png) patch;
+}
+
+Slider > Handle{
+    width: 12px;
+    height: 8px;
+    left: 30px;
+    background: file(images/slider_handle.png) patch;
+}
+
+Slider > Handle:hover{
+    background: file(images/slider_handle_hover.png) patch;
+}
+
+Widget{
+    background: file(images/widget.png) patch;
+    // top: 10px;
+    // left: 10px;
+    align: center middle;
+}
+
+Widget > Bar{
+    width: 100%;
+    height: 21px;
+    padding: 5px 0px 0px 0px;
+}
+
+Widget > Content{
+    padding: 7px 10px 13px 10px;
+}
+
+Widget > Bar > Label{
+    align: center middle;
+}
+
+Connector{
+    width: 12px;
+    height: 12px;
+    background: file(images/dropable.png) image;
+}
+
+Connector:hover{
+    background: file(images/dropable_hover.png) image;
+}
+
+Output, Input{
+    width: 13px;
+    height: 13px;
+    background: file(images/slot.png) image;
+}
+
+Output:near, Input:near{
+    background: file(images/slot_near.png) image;
+}
+
+Input{
+    left: 0px;
+}
+
+Output{
+    right: 0px;
+}
+
+#sidebar{
+    background: file(images/sidebar.png) patch;
+    width: 100%;
+    height: 30%;
+    right: 0px;
+}
+
+#toolbar{
+    top: 10px;
+    align: center;
+}
+
+Widget > Content Label{
+    width: 50px;
+}
+
+Area.inout{
+    width: 160px;
+    height: 13px;
+}
+
+#canvas{
+    width: 100%;
+    height: 100%;
+}
+
+#terrain{
+    width: 150px;
+    align: middle;
+    right: 50px;
+}
+
+Viewport{
+    width: 100%;
+    height: 70%;
+    top: 0px;
+}
+
+Viewport:focus{
+    background: file(images/viewport_focus.png) patch;
+}
