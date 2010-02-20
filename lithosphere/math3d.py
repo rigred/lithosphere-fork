@@ -40,6 +40,19 @@ class Vector(object):
     def interpolate(self, other, t):
         return self + (other - self) * t
 
+    @property
+    def length(self):
+        return math.sqrt(
+            self.x * self.x +
+            self.y * self.y +
+            self.z * self.z
+        )
+
+    def scale(self, value):
+        length = self.length
+        factor = value/length
+        return self * factor
+
     def __repr__(self):
         return 'Vector(%05.3f, %05.3f, %05.3f)' % (self.x, self.y, self.z)
 

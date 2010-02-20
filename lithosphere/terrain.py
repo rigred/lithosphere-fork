@@ -8,7 +8,7 @@ class Terrain(object):
     def __init__(self, application):
         self.input = Input(self)
         self.width, self.height = width, height = application.width, application.height
-        self.widget = Widget('Terrain', self.input, id='terrain').append_to(application.work_area)
+        self.widget = Widget('Terrain', self.input, id='terrain').append_to(application.workspace)
         
         self.vertex_texture = Texture(width, height, GL_RGBA32F)
         self.normal_texture = Texture(width, height, GL_RGBA32F)
@@ -22,7 +22,7 @@ class Terrain(object):
         self.reset = application.shader('reset.frag')
         self.shader.vars.offsets = 1.0/width, 1.0/height
         self.vbo = self.generate_vbo(width, height)
-        self.dirty = True
+        self.updated = False
 
     def generate_vbo(self, width, height):
         #as an acceleration the arrays could be prefilled in C
@@ -61,20 +61,35 @@ class Terrain(object):
         )
 
     def update(self):
+
         if self.input.source:
-            if self.input.source.update() or self.dirty:
+            self.input.source.update()
+            revision = self.revision
+            if revision != self.updated:
                 with nested(self.fbo, self.input.source.texture, self.shader):
                     quad(self.width, self.height)
                     self.vbo.vertices.copy_from(self.vertex_texture)
                     self.vbo.normals.copy_from(self.normal_texture)
+                self.updated = self.revision
         else:
-            if self.dirty:
+            revision = self.revision
+            if revision != self.updated:
                 with nested(self.fbo, self.reset):
                     quad(self.width, self.height)
                     self.vbo.vertices.copy_from(self.vertex_texture)
                     self.vbo.normals.copy_from(self.normal_texture)
 
-        self.dirty = False
+        self.updated = revision
+
+    @property
+    def revision(self):
+        if self.input.source:
+            return self.input.source.revision
+        else:
+            return None
     
     def draw(self):
+        glPushMatrix()
+        glTranslatef(-0.5, 0, -0.5)
         self.vbo.draw(GL_TRIANGLES)
+        glPopMatrix()

@@ -12,23 +12,49 @@ from pyglet.window.key import S, D, F, E, W, R
 from .util import nested
 from .math3d import Vector, Matrix
 
+def hex2color(hex):
+    return (
+        int(hex[:2], 16)/255.0,
+        int(hex[2:4], 16)/255.0,
+        int(hex[4:], 16)/255.0,
+    )
+
 class Viewport(Node):
+    def load_lighting(self, name, **kwargs):
+        return ShaderProgram(
+            VertexShader.open(here('shaders/lighting/default.vert')),
+            FragmentShader.open(here('shaders/lighting/%s' % name)),
+            **kwargs
+        )
+        
     def __init__(self, application):
         Node.__init__(self)
         self.application = application
+
         self.sun = ShaderProgram(
-            VertexShader.open(here('shaders/sun.vert')),
-            FragmentShader.open(here('shaders/sun.frag')),
+            VertexShader.open(here('shaders/lighting/default.vert')),
+            FragmentShader.open(here('shaders/lighting/sun.frag')),
             color = (1.0, 1.0, 1.0),
             direction = (-0.5, -0.5, 0.2),
             ambient = (0.1, 0.1, 0.1),
         )
+
+        self.hemisphere = self.load_lighting('hemisphere.frag',
+            ground_color = hex2color('4e4a3e'),
+            sky_color = hex2color('e4f5fb'),
+            direction = (-0.5, -0.5, 0.2),
+            ambient = (0.2, 0.2, 0.2),
+        )
+
+        self.spherical_harmonics = self.load_lighting('spherical_harmonics.frag')
+        
+        self.light = self.spherical_harmonics
         
         self.speed = Vector(0, 0, 0)
         self.angular_speed = Vector(0, 0, 0)
 
-        self.pos = Vector(-0.559, 0.615, -0.128)
-        self.rotation = Vector(1.031, 0.000, 0.440)
+        self.pos = Vector(-0.957, 0.690, -0.372)
+        self.rotation = Vector(1.218, 0.000, 0.680)
 
         self.matrix = Matrix()
         self.at = self.matrix * Vector(0, 0, 1)
@@ -47,7 +73,15 @@ class Viewport(Node):
             self.speed += (self.matrix * Vector(leftright, updown, frontback)) * delta * self.factor
 
         self.pos += self.speed
+        if self.pos.length > 2.0:
+            self.pos = self.pos.scale(2.0)
+
         self.rotation += self.angular_speed
+        if self.rotation.z > 1.3:
+            self.rotation.z  = 1.3
+        elif self.rotation.z < -1.3:
+            self.rotation.z = -1.3
+
         self.matrix.rotate(self.rotation)
         self.at = self.matrix * Vector(0, 0, 1)
         self.up = self.matrix * Vector(0, 1, 0)
@@ -68,7 +102,7 @@ class Viewport(Node):
         rect = self.rect
         with nested(
             Projection(rect.left, rect.bottom, rect.width, rect.height, fov=40, near=0.01), 
-            self.sun,
+            self.light,
             DepthTest,
         ):
             glPushMatrix() 

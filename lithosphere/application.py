@@ -8,7 +8,7 @@
 import pyglet
 from pyglet.gl import *
 
-from halogen import Root, Area, here
+from halogen import Root, Area, Workspace, here
 from gletools import Texture, Framebuffer, ShaderProgram, FragmentShader
 
 from .toolbar import Toolbar
@@ -16,13 +16,14 @@ from .terrain import Terrain
 from .lines import LineCanvas
 from .viewport import Viewport
 
-from .noise import Random, Simplex
-from .binops import Addition, Multiply
+from .noise import Simplex
+from .binops import Add, Multiply
+from .filters import Gaussian, Erode
 
 class Application(object):
     def __init__(self):
-        self.width = 512
-        self.height = 512
+        self.width = 256
+        self.height = 256
         self.shaders = {}
 
         self.framebuffer = Framebuffer()
@@ -31,15 +32,23 @@ class Application(object):
         glClearColor(0.3, 0.3, 0.3, 1.0)
         self.root = Root(self.window, here('style/style.hss'))
         self.work_area = Area(id='sidebar').append_to(self.root)
-        self.canvas = LineCanvas().append_to(self.work_area)
+        self.workspace = Workspace().append_to(self.work_area)
+        self.canvas = LineCanvas().append_to(self.workspace)
         self.terrain = Terrain(self)
         self.toolbar = Toolbar(self)
-        self.toolbar.add(Random)
-        self.toolbar.add(Simplex)
-        self.toolbar.add(Addition)
-        self.toolbar.add(Multiply)
+        self.fill_toolbar()
         self.viewport = Viewport(self).append_to(self.root)
         pyglet.clock.schedule_interval(self.update, 0.05)
+        self.temp = self.create_texture()
+        self.height_reset = self.shader('height_reset.frag')
+
+    def fill_toolbar(self):
+        add = self.toolbar.add
+        add(Simplex)
+        add(Add)
+        add(Multiply)
+        add(Gaussian)
+        add(Erode)
 
     def run(self):
         pyglet.app.run()
@@ -50,7 +59,7 @@ class Application(object):
         self.root.draw()
 
     def create_texture(self):
-        return Texture(self.width, self.height, format=GL_LUMINANCE32F_ARB)
+        return Texture(self.width, self.height, format=GL_LUMINANCE32F_ARB, clamp='st')
 
     def shader(self, name):
         if name in self.shaders:
