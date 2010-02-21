@@ -9,7 +9,7 @@ from halogen import Widget, Column, Area
 from pyglet.gl import *
 from gletools import Sampler2D
 
-from .util import Output, Input, quad, nested
+from .util import Output, Input, quad, nested, connect
 from .node import Node
 
 class Binop(Node):
@@ -61,6 +61,17 @@ class Binop(Node):
             op1 = self.op1,
             op2 = self.op2,
         )
+    
+    def reconnect(self, data, instances):
+        op1_id = data['op1']
+        if op1_id:
+            node = instances[op1_id]
+            connect(node, self.op1)
+
+        op2_id = data['op2']
+        if op2_id:
+            node = instances[op2_id]
+            connect(node, self.op2)
 
 class Add(Binop):
     label = 'Add'

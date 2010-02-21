@@ -45,7 +45,7 @@ class Base(Node):
     def reconnect(self, data, instances):
         input_id = data['input']
         if input_id:
-            node = instances[data['input']]
+            node = instances[input_id]
             connect(node, self.input)
 
 class Gaussian(Base):
