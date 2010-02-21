@@ -9,9 +9,7 @@ import math
 
 class Vector(object):
     def __init__(self, x, y, z):
-        self.x = float(x)
-        self.y = float(y)
-        self.z = float(z)
+        self.xyz = x, y, z
     
     def __iter__(self):
         return iter((self.x, self.y, self.z))
@@ -36,6 +34,12 @@ class Vector(object):
             y = self.y + other.y,
             z = self.z + other.z,
         )
+    
+    def __iadd__(self, other):
+        self.x += other.x
+        self.y += other.y
+        self.z += other.z
+        return self
 
     def interpolate(self, other, t):
         return self + (other - self) * t
@@ -51,10 +55,23 @@ class Vector(object):
     def scale(self, value):
         length = self.length
         factor = value/length
-        return self * factor
+        self *= factor
+
+    def __imul__(self, scalar):
+        self.x *= scalar 
+        self.y *= scalar 
+        self.z *= scalar 
+        return self
 
     def __repr__(self):
         return 'Vector(%05.3f, %05.3f, %05.3f)' % (self.x, self.y, self.z)
+
+    def __setattr__(self, name, value):
+        if isinstance(value, (list, tuple)):
+            for component, value in zip(name, value):
+                self.__dict__[component] = float(value)
+        else:
+            self.__dict__[name] = value
 
 class Quaternion(object):
     def __init__(self, x=0.0, y=0.0, z=0.0, w=1.0):

@@ -1,5 +1,5 @@
 from halogen import Widget
-from .util import Input, nested, quad
+from .util import Input, nested, quad, connect
 from gletools import Texture, Framebuffer, VertexObject
 from pyglet.gl import *
 from ctypes import c_float, c_uint
@@ -60,8 +60,16 @@ class Terrain(object):
             dynamic_draw_n4f    = n4f,
         )
 
-    def update(self):
+    def open(self, data, instances):
+        offset = data['offset']
+        self.widget.rect.x, self.widget.rect.y = offset['x'], offset['y']
+        self.widget.layout()
+        input_id = data['source']
+        if input_id:
+            node = instances[input_id]
+            connect(node, self.input)
 
+    def update(self):
         if self.input.source:
             self.input.source.update()
             revision = self.revision

@@ -20,13 +20,6 @@ def hex2color(hex):
     )
 
 class Viewport(Node):
-    def load_lighting(self, name, **kwargs):
-        return ShaderProgram(
-            VertexShader.open(here('shaders/lighting/default.vert')),
-            FragmentShader.open(here('shaders/lighting/%s' % name)),
-            **kwargs
-        )
-        
     def __init__(self, application):
         Node.__init__(self)
         self.application = application
@@ -62,6 +55,14 @@ class Viewport(Node):
 
         pyglet.clock.schedule_interval(self.update_view, 0.03)
         self.factor = 0.10
+    
+    def load_lighting(self, name, **kwargs):
+        return ShaderProgram(
+            VertexShader.open(here('shaders/lighting/default.vert')),
+            FragmentShader.open(here('shaders/lighting/%s' % name)),
+            **kwargs
+        )
+        
 
     def update_view(self, delta):
         self.dampen()
@@ -74,7 +75,7 @@ class Viewport(Node):
 
         self.pos += self.speed
         if self.pos.length > 2.0:
-            self.pos = self.pos.scale(2.0)
+            self.pos.scale(2.0)
 
         self.rotation += self.angular_speed
         if self.rotation.z > 1.3:

@@ -42,15 +42,17 @@ void main(){
         neighbor_pos = vec3(neighbor.x, value, neighbor.y);
         normal += get_normal(pos, neighbor_pos);
 
-        if(invert){
-            if(value > height){
-                result += value;
-                count += 1.0;
-            }
-        } else{
-            if(value < height){
-                result += value;
-                count += 1.0;
+        if(i>3){
+            if(invert){
+                if(value > height){
+                    result += value;
+                    count += 1.0;
+                }
+            } else{
+                if(value < height){
+                    result += value;
+                    count += 1.0;
+                }
             }
         }
     }

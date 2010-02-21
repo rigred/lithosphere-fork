@@ -10,10 +10,10 @@ from halogen import Column, Button
 class Toolbar(object):
     def __init__(self, application):
         self.application = application
-        self.row = Column(id='toolbar').append_to(application.work_area)
+        self.column = Column(id='toolbar').append_to(application.work_area)
 
     def add(self, type):
-        button = Button(type.__name__).append_to(self.row)
+        button = Button(type.__name__).append_to(self.column)
         @button.event
         def on_click():
             type(self.application)

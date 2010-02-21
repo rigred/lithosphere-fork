@@ -9,16 +9,12 @@ class LabelSlider(Row):
         Label(title).append_to(self)
         self.slider = Slider(start=start).append_to(self)
 
-    @property
-    def value(self):
+    def get_value(self):
         return self.slider.value
-
-def slider(title, on_change=None, start=0):
-    row = Row()
-    Label(title).append_to(row)
-    instance = Slider(start=start).append_to(row)
-    instance.on_change = on_change
-    return row
+    def set_value(self, value):
+        self.slider.value = value
+    value = property(get_value, set_value)
+    del get_value, set_value
 
 class Input(Slot):
     def __init__(self, node):
@@ -28,14 +24,18 @@ class Input(Slot):
 
     def on_remove(self, connector):
         self.source = None
+        connector.input = None
     
     def on_drop(self, connector):
         self.source = connector.output.node
+        connector.input = self
 
 class Connector(Dropable):
     target = Input
     def __init__(self, output):
+        self.input = None
         self.output = output
+        self.output.connections.append(self)
         application = output.node.application
         self.canvas = application.canvas
         self.canvas.add(self)
@@ -46,13 +46,26 @@ class Connector(Dropable):
             self.output.content = Connector(self.output)
 
         if not slot:
-            self.canvas.remove(self)
+            self.delete()
+
+    def delete(self):
+        self.canvas.remove(self)
+        self.output.connections.remove(self)
+        if self.parent:
+            self.remove()
+        if self.input:
+            self.input.on_remove(self)
 
 class Output(Slot):
     def __init__(self, node):
-        self.node = node
         Slot.__init__(self)
+        self.node = node
+        self.connections = []
         self.content = Connector(self)
+
+    def delete(self):
+        for connection in list(self.connections):
+            connection.delete()
 
 def quad(top, right, bottom, left):
     glVertex3f(bottom, right, 0.0)
@@ -75,3 +88,7 @@ def quad(width, height):
             0, 1,
         )),
     )
+
+def connect(node, input):
+    connector = Connector(node.output)
+    input.drop(connector)

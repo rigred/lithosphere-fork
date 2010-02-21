@@ -6,21 +6,19 @@
 """
 
 from halogen import Widget, Column, Area
+from pyglet.gl import *
 from gletools import Sampler2D
 
 from .util import Output, Input, quad, nested
-from pyglet.gl import *
+from .node import Node
 
-class Binop(object):
+class Binop(Node):
     def __init__(self, application):
-        self.application = application
-        self.texture = application.create_texture()
-        column = Column()
-        self.op1 = Input(self).append_to(column)
-        inout = Area().append_to(column).add_class('inout')
+        Node.__init__(self, self.label, application)
+        self.op1 = Input(self).append_to(self.column)
+        inout = Area().append_to(self.column).add_class('inout')
         self.op2 = Input(self).append_to(inout)
         self.output = Output(self).append_to(inout)
-        self.widget = Widget(self.label, column).add_class('node').append_to(application.workspace)
         self.shader = application.shader(self.shader)
         self.shader.vars.op1 = Sampler2D(GL_TEXTURE0)
         self.shader.vars.op2 = Sampler2D(GL_TEXTURE1)
@@ -57,6 +55,13 @@ class Binop(object):
         else:
             return hash(self.__class__.__name__)
 
+    @property
+    def sources(self):
+        return dict(
+            op1 = self.op1,
+            op2 = self.op2,
+        )
+
 class Add(Binop):
     label = 'Add'
     shader = 'addition.frag'
@@ -64,3 +69,5 @@ class Add(Binop):
 class Multiply(Binop):
     label = 'Multiply'
     shader = 'multiply.frag'
+
+nodes = Add, Multiply

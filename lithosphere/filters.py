@@ -7,19 +7,50 @@
 
 from halogen import Widget, Column, Area
 from gletools import Sampler2D
-
-from .util import Output, Input, quad, nested, slider
 from pyglet.gl import *
 
-class Gaussian(object):
-    def __init__(self, application):
-        self.application = application
-        self.texture = application.create_texture()
-        column = Column()
-        self.inout = Area().append_to(column).add_class('inout')
+from .util import Output, Input, quad, nested, LabelSlider, connect
+from .node import Node
+
+class Base(Node):
+    def __init__(self, label, application):
+        Node.__init__(self, label, application)
+        self.inout = Area().append_to(self.column).add_class('inout')
         self.input = Input(self).append_to(self.inout)
         self.output = Output(self).append_to(self.inout)
-        self.widget = Widget('Gaussian', column).add_class('node').append_to(application.workspace)
+        self.repeat = LabelSlider('Repeat', start=0.01).insert_before(self.inout)
+        self.updated = False
+    
+    @property
+    def revision(self):
+        if self.input.source:
+            return hash((self.__class__.__name__, self.repeat.value, self.input.source.revision))
+        else:
+            return hash((self.__class__.__name__, self.repeat.value))
+    
+    def get_parameters(self):
+        return dict(repeat=self.repeat.value)
+    def set_parameters(self, values):
+        self.repeat.value = values['repeat']
+
+    parameters = property(get_parameters, set_parameters)
+    del get_parameters, set_parameters
+    
+    @property
+    def sources(self):
+        return dict(
+            input = self.input,
+        )
+
+    def reconnect(self, data, instances):
+        input_id = data['input']
+        if input_id:
+            node = instances[data['input']]
+            connect(node, self.input)
+
+class Gaussian(Base):
+    def __init__(self, application):
+        Base.__init__(self, 'Gaussian', application)
         
         self.shader_x = application.shader('gaussian_x.frag')
         self.shader_x.vars.texture = Sampler2D(GL_TEXTURE0)
@@ -28,15 +59,6 @@ class Gaussian(object):
         self.shader_y = application.shader('gaussian_y.frag')
         self.shader_y.vars.texture = Sampler2D(GL_TEXTURE0)
         self.shader_y.vars.offsets = 1.0/self.texture.width, 1.0/self.texture.height
-
-        self.updated = False
-        self.slider('Repeat', 'repeat', 0.01)
-    
-    def slider(self, title, name, initial):
-        setattr(self, name, initial)
-        def on_change(value):
-            setattr(self, name, value)
-        slider(title, on_change, initial).insert_before(self.inout)
 
     def update(self):
         if self.input.source:
@@ -60,7 +82,7 @@ class Gaussian(object):
                 with nested(fbo, self.shader_y, temp):
                     quad(output.width, output.height)
 
-                for i in range(int(self.repeat*100.0)):
+                for i in range(int(self.repeat.value*100.0)):
                     fbo.textures[0] = temp
                     with nested(fbo, self.shader_x, output):
                         quad(output.width, output.height)
@@ -72,35 +94,14 @@ class Gaussian(object):
                 self.updated = revision
                 return True
     
-    @property
-    def revision(self):
-        if self.input.source:
-            return hash((self.__class__.__name__, self.repeat, self.input.source.revision))
-        else:
-            return hash((self.__class__.__name__, self.repeat))
-
-class Erode(object):
+class Erode(Base):
     def __init__(self, application):
-        self.application = application
-        self.texture = application.create_texture()
-        column = Column()
-        self.inout = Area().append_to(column).add_class('inout')
-        self.input = Input(self).append_to(self.inout)
-        self.output = Output(self).append_to(self.inout)
-        self.widget = Widget('Erode', column).add_class('node').append_to(application.workspace)
+        Base.__init__(self, 'Erode', application)
         
         self.shader = application.shader('erode.frag')
         self.shader.vars.texture = Sampler2D(GL_TEXTURE0)
         self.shader.vars.offsets = 1.0/self.texture.width, 1.0/self.texture.height
         
-        self.updated = False
-        self.slider('Repeat', 'repeat', 0.0)
-    
-    def slider(self, title, name, initial):
-        setattr(self, name, initial)
-        def on_change(value):
-            setattr(self, name, value)
-        slider(title, on_change, initial).insert_before(self.inout)
 
     def update(self):
         if self.input.source:
@@ -121,7 +122,7 @@ class Erode(object):
                 with nested(fbo, self.shader, input):
                     quad(output.width, output.height)
             
-                for i in range(int(self.repeat*100.0)):
+                for i in range(int(self.repeat.value*100.0)):
                     fbo.textures[0] = temp
                     with nested(fbo, self.shader, output):
                         quad(output.width, output.height)
@@ -132,10 +133,5 @@ class Erode(object):
 
                 self.updated = revision
                 return True
-    
-    @property
-    def revision(self):
-        if self.input.source:
-            return hash((self.__class__.__name__, self.repeat, self.input.source.revision))
-        else:
-            return hash((self.__class__.__name__, self.repeat))
+
+nodes = Gaussian, Erode

@@ -9,14 +9,12 @@ from halogen import Widget, Column
 from gletools import Sampler2D
 from pyglet.gl import *
 from .util import Output, LabelSlider, quad, nested
+from .node import Node
 
-class Simplex(object):
+class Simplex(Node):
     def __init__(self, application):
-        self.application = application
-        self.texture = application.create_texture()
-        self.column = Column()
+        Node.__init__(self, 'Simplex', application)
         self.output = Output(self).append_to(self.column)
-        self.widget = Widget('Simplex', self.column).add_class('node').append_to(application.workspace)
         self.shader = application.shader('simplex.frag')
         self.shader.vars.texture = Sampler2D(GL_TEXTURE0)
 
@@ -54,7 +52,23 @@ class Simplex(object):
                     quad(self.texture.width, self.texture.height)
 
             self.updated = revision
-   
+
+    def get_parameters(self):
+        return dict(
+            size = self.size.value,
+            offset = self.offset.value,
+            height = self.height.value,
+            octaves = self.octaves.value,
+            falloff = self.falloff.value,
+            step = self.step.value,
+        )
+    def set_parameters(self, values):
+        for name, value in values.items():
+            getattr(self, name).value = value
+        
+    parameters = property(get_parameters, set_parameters)
+    del get_parameters, set_parameters
+
     @property
     def revision(self):
         return hash((
@@ -66,3 +80,5 @@ class Simplex(object):
             self.falloff.value,
             self.step.value,
         ))
+
+nodes = [Simplex]
