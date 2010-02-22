@@ -1,4 +1,4 @@
-from halogen import Widget, Column
+from halogen import Widget, Column, Label, Button, Area
 from .util import Output, LabelSlider, quad, nested
 
 class Node(object):
@@ -6,8 +6,11 @@ class Node(object):
         self.application = application
         application.add_node(self)
         self.column = Column()
+        bar_area = Area().add_class('widget_bar')
+        Label(label).append_to(bar_area)
+        Button().append_to(bar_area).on_click = self.delete
         self.texture = application.create_texture()
-        self.widget = Widget(label, self.column).add_class('node').append_to(application.workspace)
+        self.widget = Widget(bar_area, self.column).add_class('node').append_to(application.workspace)
 
     def get_parameters(self):
         return []

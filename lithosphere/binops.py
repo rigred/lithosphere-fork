@@ -31,6 +31,8 @@ class Binop(Node):
             revision = self.revision 
 
             if revision != self.updated:
+                view = self.application.processing_view
+
                 tex1 = self.op1.source.texture
                 tex2 = self.op2.source.texture
                 tex1.unit = GL_TEXTURE0
@@ -39,7 +41,7 @@ class Binop(Node):
                 fbo = self.application.framebuffer
                 fbo.textures[0] = self.texture
 
-                with nested(fbo, self.shader, tex1, tex2):
+                with nested(view, fbo, self.shader, tex1, tex2):
                     quad(self.texture.width, self.texture.height)
 
                 self.updated = revision

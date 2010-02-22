@@ -27,6 +27,8 @@ class Simplex(Node):
         self.updated = False
 
     def update(self):
+        view = self.application.processing_view
+
         revision = self.revision
         if revision != self.updated:
             size = 1000.0 ** self.size.value - 1.0
@@ -40,7 +42,7 @@ class Simplex(Node):
             self.texture.unit = GL_TEXTURE0
             fbo.textures[0] = self.texture
 
-            with nested(fbo, self.application.height_reset):
+            with nested(view, fbo, self.application.height_reset):
                 quad(self.texture.width, self.texture.height)
                 
             for i in range(1, octaves+2):
@@ -48,7 +50,7 @@ class Simplex(Node):
                 self.shader.vars['offset'] = offset * step**i
                 self.shader.vars['height'] = height / i**falloff
 
-                with nested(self.texture, fbo, self.shader):
+                with nested(view, self.texture, fbo, self.shader):
                     quad(self.texture.width, self.texture.height)
 
             self.updated = revision

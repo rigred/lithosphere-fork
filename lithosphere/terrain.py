@@ -6,6 +6,7 @@ from ctypes import c_float, c_uint
 
 class Terrain(object):
     def __init__(self, application):
+        self.application = application
         self.input = Input(self)
         self.width, self.height = width, height = application.width, application.height
         self.widget = Widget('Terrain', self.input, id='terrain').append_to(application.workspace)
@@ -70,11 +71,12 @@ class Terrain(object):
             connect(node, self.input)
 
     def update(self):
+        view = self.application.processing_view
         if self.input.source:
             self.input.source.update()
             revision = self.revision
             if revision != self.updated:
-                with nested(self.fbo, self.input.source.texture, self.shader):
+                with nested(view, self.fbo, self.input.source.texture, self.shader):
                     quad(self.width, self.height)
                     self.vbo.vertices.copy_from(self.vertex_texture)
                     self.vbo.normals.copy_from(self.normal_texture)
@@ -82,7 +84,7 @@ class Terrain(object):
         else:
             revision = self.revision
             if revision != self.updated:
-                with nested(self.fbo, self.reset):
+                with nested(view, self.fbo, self.reset):
                     quad(self.width, self.height)
                     self.vbo.vertices.copy_from(self.vertex_texture)
                     self.vbo.normals.copy_from(self.normal_texture)

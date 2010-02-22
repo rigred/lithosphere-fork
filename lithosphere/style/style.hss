@@ -70,6 +70,22 @@ Widget > Bar Label{
     align: center middle;
 }
 
+Widget > Bar > Area{
+    height: 16px;
+    width: 100%;
+}
+
+Widget > Bar Button{
+    width: 16px;
+    height: 16px;
+    background: file(images/delete.png) image;
+    right: 10px;
+}
+
+Widget > Bar Button:hover{
+    background: file(images/delete_hover.png) image;
+}
+
 Widget > Content Label{
     width: 70px;
 }
@@ -112,6 +128,9 @@ Output{
 #toolbar{
     top: 10px;
     left: 10px;
+    background: file(images/toolbar.png) patch;
+    padding: 15px 15px 15px 15px;
+    spacing: 7px;
 }
 
 #toolbar > Button{
@@ -134,13 +153,13 @@ Area.inout{
     right: 50px;
 }
 
-Viewport{
+View3d{
     width: 100%;
     height: 60%;
     top: 0px;
 }
 
-Viewport:focus{
+View3d:focus{
     background: file(images/viewport_focus.png) patch;
 }
 

@@ -19,7 +19,7 @@ def hex2color(hex):
         int(hex[4:], 16)/255.0,
     )
 
-class Viewport(Node):
+class View3d(Node):
     def __init__(self, application):
         Node.__init__(self)
         self.application = application

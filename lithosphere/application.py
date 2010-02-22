@@ -4,20 +4,20 @@
     :copyright: 2010 by Florian Boesch <pyalot@gmail.com>.
     :license: GNU AGPL v3 or later, see LICENSE for more details.
 """
-import json, os
+import json, os, sys, os
 
 import pyglet
 import pyglet.gl
 from pyglet.gl import *
 
 from halogen import Root, Area, Workspace, here, Button
-from gletools import Texture, Framebuffer, ShaderProgram, FragmentShader
+from gletools import Texture, Framebuffer, ShaderProgram, FragmentShader, Viewport, Screen
 
 from .dialogs import Dialogs
 from .toolbar import Toolbar
 from .terrain import Terrain
 from .lines import LineCanvas
-from .viewport import Viewport
+from .viewport import View3d
 from .node_factory import NodeFactory
 
 class Application(object):
@@ -38,7 +38,9 @@ class Application(object):
         self.terrain = Terrain(self)
         self.toolbar = Toolbar(self)
         self.node_factory = NodeFactory(self)
-        self.viewport = Viewport(self).append_to(self.root)
+        self.viewport = View3d(self).append_to(self.root)
+        #self.processing_view = Viewport(0, 0, self.width, self.height)
+        self.processing_view = Screen(0, 0, self.width, self.height)
         pyglet.clock.schedule_interval(self.update, 0.05)
         self.temp = self.create_texture()
         self.height_reset = self.shader('height_reset.frag')
@@ -131,6 +133,8 @@ class Application(object):
         self.window.clear()
         self.viewport.draw_terrain()
         self.root.draw()
+        glColor4f(1.0, 1.0, 1.0, 1.0)
+        #self.terrain.normal_texture.draw(200, 0)
 
     def create_texture(self):
         return Texture(self.width, self.height, format=GL_LUMINANCE32F_ARB, clamp='st')
@@ -150,4 +154,8 @@ class Application(object):
 
 def main():
     application = Application()
+    if len(sys.argv) > 1:
+        path = sys.argv[1]
+        if os.path.exists(path):
+            application.on_open(path)
     application.run()

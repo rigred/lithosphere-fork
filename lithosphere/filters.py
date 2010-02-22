@@ -66,6 +66,7 @@ class Gaussian(Base):
             revision = self.revision
 
             if revision != self.updated:
+                view = self.application.processing_view
                 input = self.input.source.texture
                 input.unit = GL_TEXTURE0
                 output = self.texture
@@ -75,20 +76,20 @@ class Gaussian(Base):
 
                 fbo = self.application.framebuffer
                 fbo.textures[0] = temp
-                with nested(fbo, self.shader_x, input):
+                with nested(view, fbo, self.shader_x, input):
                     quad(output.width, output.height)
                 
                 fbo.textures[0] = output
-                with nested(fbo, self.shader_y, temp):
+                with nested(view, fbo, self.shader_y, temp):
                     quad(output.width, output.height)
 
                 for i in range(int(self.repeat.value*100.0)):
                     fbo.textures[0] = temp
-                    with nested(fbo, self.shader_x, output):
+                    with nested(view, fbo, self.shader_x, output):
                         quad(output.width, output.height)
                     
                     fbo.textures[0] = output
-                    with nested(fbo, self.shader_y, temp):
+                    with nested(view, fbo, self.shader_y, temp):
                         quad(output.width, output.height)
 
                 self.updated = revision
@@ -109,6 +110,8 @@ class Erode(Base):
             revision = self.revision
 
             if revision != self.updated:
+                view = self.application.processing_view
+
                 input = self.input.source.texture
                 input.unit = GL_TEXTURE0
                 output = self.texture
@@ -119,16 +122,16 @@ class Erode(Base):
 
                 fbo = self.application.framebuffer
                 fbo.textures[0] = output
-                with nested(fbo, self.shader, input):
+                with nested(view, fbo, self.shader, input):
                     quad(output.width, output.height)
             
                 for i in range(int(self.repeat.value*100.0)):
                     fbo.textures[0] = temp
-                    with nested(fbo, self.shader, output):
+                    with nested(view, fbo, self.shader, output):
                         quad(output.width, output.height)
                     
                     fbo.textures[0] = output
-                    with nested(fbo, self.shader, temp):
+                    with nested(view, fbo, self.shader, temp):
                         quad(output.width, output.height)
 
                 self.updated = revision
