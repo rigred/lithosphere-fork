@@ -30,6 +30,7 @@ class Node(object):
             if slot.source:
                 slot.content.delete()
         self.widget.remove()
+        self.application.remove_node(self)
 
     def reconnect(self, data, instances):
         pass

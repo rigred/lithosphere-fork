@@ -1,5 +1,4 @@
 uniform sampler2D texture;
-uniform bool invert;
 uniform vec2 offsets;
 const float pi = 3.14159265358979323846264;
 
@@ -42,18 +41,9 @@ void main(){
         neighbor_pos = vec3(neighbor.x, value, neighbor.y);
         normal += get_normal(pos, neighbor_pos);
 
-        if(i>3){
-            if(invert){
-                if(value > height){
-                    result += value;
-                    count += 1.0;
-                }
-            } else{
-                if(value < height){
-                    result += value;
-                    count += 1.0;
-                }
-            }
+        if(value < height){
+            result += value;
+            count += 1.0;
         }
     }
     normal = normalize(normal/8.0);

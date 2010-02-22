@@ -52,7 +52,7 @@ Widget{
 }
 
 Widget.node{
-    left: 150px;
+    left: 250px;
     align: middle;
 }
 
@@ -133,7 +133,7 @@ Output{
     spacing: 7px;
 }
 
-#toolbar > Button{
+#toolbar Button{
     width: 80px;
 }
 

@@ -7,7 +7,7 @@
 from halogen import Node, here
 from gletools import Projection, ShaderProgram, VertexShader, FragmentShader, DepthTest
 from pyglet.gl import *
-from pyglet.window.key import S, D, F, E, W, R
+from pyglet.window.key import S, D, F, E, W, R, LSHIFT
 
 from .util import nested
 from .math3d import Vector, Matrix
@@ -93,16 +93,17 @@ class View3d(Node):
 
     def getaxis(self, key1, key2):
         value = 0.0
+        factor = 0.2 if self.root.keys[LSHIFT] else 1.0
         if self.root.keys[key1]:
-            value -= 1.0
+            value -= factor
         if self.root.keys[key2]:
-            value += 1.0
+            value += factor
         return value
     
     def draw_terrain(self):
         rect = self.rect
         with nested(
-            Projection(rect.left, rect.bottom, rect.width, rect.height, fov=40, near=0.01), 
+            Projection(rect.left, rect.bottom, rect.width, rect.height, fov=40, near=0.001, far=4.0), 
             self.light,
             DepthTest,
         ):

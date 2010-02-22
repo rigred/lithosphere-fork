@@ -22,14 +22,18 @@ from .node_factory import NodeFactory
 
 class Application(object):
     def __init__(self):
-        self.width = 512
-        self.height = 512
+        self.width = 2048
+        self.height = 2048
         self.shaders = {}
 
         self.framebuffer = Framebuffer()
         self.window = pyglet.window.Window(fullscreen=True, vsync=False)
         self.window.push_handlers(self)
         glClearColor(0.3, 0.3, 0.3, 1.0)
+        
+        self.dialogs = Dialogs()
+        self.dialogs.on_open = self.on_open
+        self.dialogs.on_save = self.on_save
         
         self.root = Root(self.window, here('style/style.hss'))
         self.work_area = Area(id='sidebar').append_to(self.root)
@@ -39,24 +43,18 @@ class Application(object):
         self.toolbar = Toolbar(self)
         self.node_factory = NodeFactory(self)
         self.viewport = View3d(self).append_to(self.root)
-        #self.processing_view = Viewport(0, 0, self.width, self.height)
         self.processing_view = Screen(0, 0, self.width, self.height)
         pyglet.clock.schedule_interval(self.update, 0.05)
         self.temp = self.create_texture()
         self.height_reset = self.shader('height_reset.frag')
 
-        self.dialogs = Dialogs()
-        self.dialogs.on_open = self.on_open
-        self.dialogs.on_save = self.on_save
-
-        Button('Open').append_to(self.toolbar.column).on_click = self.dialogs.open
-        Button('Save').append_to(self.toolbar.column).on_click = self.dialogs.save
-        Button('New').append_to(self.toolbar.column).on_click = self.empty
-
         self.nodes = []
 
     def add_node(self, node):
         self.nodes.append(node)
+
+    def remove_node(self, node):
+        self.nodes.remove(node)
 
     def on_open(self, filename):
         if os.path.isdir(filename):
@@ -125,9 +123,8 @@ class Application(object):
         pyglet.app.run()
 
     def empty(self):
-        for node in self.nodes:
+        for node in list(self.nodes):
             node.delete()
-        self.nodes = []
     
     def on_draw(self):
         self.window.clear()
