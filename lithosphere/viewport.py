@@ -123,7 +123,7 @@ class View3d(Node):
         glPushMatrix()
         glLineWidth(1.0)
         glEnable(GL_BLEND)
-        glColor4f(0.1, 0.1, 0.1, 0.2)
+        glColor4f(0.4, 0.4, 0.4, 0.1)
         glTranslatef(0.0, 0.5, 0.0)
         pyglet.graphics.draw(24, GL_LINES, ('v3f', (
             +0.5, +0.5, +0.5, -0.5, +0.5, +0.5,

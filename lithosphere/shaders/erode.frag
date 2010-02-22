@@ -1,53 +1,50 @@
 uniform sampler2D texture;
 uniform vec2 offsets;
-const float pi = 3.14159265358979323846264;
-
-const float get(vec2 neighbor){
-    return texture2D(texture, neighbor).r;
-}
+const float pih = 1.0/(3.14159265358979323846264*0.5);
 
 const vec2 neighbors[] = {
-    vec2(1, 1),
-    vec2(-1, -1),
-    vec2(-1, 1),
-    vec2(1, -1),
+//    vec2(1, 1),
+//    vec2(-1, -1),
+//    vec2(-1, 1),
+//    vec2(1, -1),
     vec2(-1, 0),
     vec2(0, 1),
     vec2(0, -1),
     vec2(1, 0)
 };
 
-vec3 get_normal(vec3 pos, vec3 neighbor_pos){
-    vec3 neighbor_vec = neighbor_pos-pos;
-    vec3 perp = cross(neighbor_vec, vec3(0.0, 1.0, 0.0));
-    return normalize(cross(neighbor_vec, perp));
+
+vec3 get(vec2 uv){
+    float height = texture2D(texture, vec2(uv));
+    return vec3(uv.s, height, uv.t);
+}
+
+vec3 get_normal(vec3 p){
+    float x = offsets.x;
+    float z = offsets.y;
+    return normalize(vec3(
+        get(vec2(p.x-x, p.z)).y - get(vec2(p.x+x, p.z)).y,
+        x+z,
+        get(vec2(p.x, p.z-z)).y - get(vec2(p.x, p.z+z)).y
+    ));
 }
 
 void main(){
     vec2 uv = gl_TexCoord[0].st;
-    float height = get(uv);
+    vec3 pos = get(uv);
+
     float count = 1.0;
-    float result = height;
-    vec3 pos = vec3(uv.x, height, uv.y);
-    
-    int i;
-    float value;
-    vec2 neighbor;
-    vec3 neighbor_pos, normal;
-
-    for(i=0; i<8; i++){
-        neighbor = uv + neighbors[i] * offsets;
-        value = get(neighbor);
-        neighbor_pos = vec3(neighbor.x, value, neighbor.y);
-        normal += get_normal(pos, neighbor_pos);
-
-        if(value < height){
-            result += value;
+    float result = pos.y;
+    for(int i=0; i<4; i++){
+        vec3 neighbor = get(uv+neighbors[i]*offsets);
+        if(neighbor.y < pos.y){
+            result += neighbor.y;
             count += 1.0;
         }
     }
-    normal = normalize(normal/8.0);
-    result = result/count;
-    float factor = (dot(normal, vec3(0.0, 1.0, 0.0))+1.5)*5.0;
-    gl_FragColor = vec4(mix(height, result, clamp(factor, 0.0, 0.95)));
+    vec3 normal = get_normal(pos);
+    //float factor = 1.0-acos(dot(normal, vec3(0.0, 1.0, 0.0)))*pih;
+    float factor = dot(normal, vec3(0.0, 1.0, 0.0));
+    result = mix(result/count, pos.y, factor);
+    gl_FragColor = vec4(result);
 }

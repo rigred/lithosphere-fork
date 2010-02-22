@@ -139,7 +139,7 @@ varying vec3 frag_normal, pos, frag_lightdir;
 
 void main(){
     if(gl_FrontFacing){
-        const vec3 normal = normalize(frag_normal);
+        const vec3 normal = normalize(frag_normal) * -1.0;
         const float x = normal.x;
         const float y = normal.z; 
         const float z = normal.y; 
