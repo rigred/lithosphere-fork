@@ -22,8 +22,8 @@ from .node_factory import NodeFactory
 
 class Application(object):
     def __init__(self):
-        self.width = 2048
-        self.height = 2048
+        self.width = 512
+        self.height = 512
         self.shaders = {}
 
         self.framebuffer = Framebuffer()

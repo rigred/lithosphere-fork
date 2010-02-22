@@ -27,8 +27,11 @@ class Node(object):
         self.output.delete()
         self.texture.delete()
         for name, slot in self.sources.items():
-            if slot.source:
+            if slot.content:
                 slot.content.delete()
+                slot.content = None
+            if slot.source:
+                slot.source = None
         self.widget.remove()
         self.application.remove_node(self)
 

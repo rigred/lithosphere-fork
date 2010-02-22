@@ -114,9 +114,35 @@ class View3d(Node):
                 self.pos.x + self.at.x, self.pos.y + self.at.y, self.pos.z + self.at.z,
                 self.up.x, self.up.y, self.up.z,
             )
-            glColor3f(0.7, 0.7, 0.7)
+            glColor4f(0.5, 0.5, 0.5, 1.0)
             self.application.terrain.draw()
+            self.draw_unit_cube()
             glPopMatrix()
+
+    def draw_unit_cube(self):
+        glPushMatrix()
+        glLineWidth(1.0)
+        glEnable(GL_BLEND)
+        glColor4f(0.1, 0.1, 0.1, 0.2)
+        glTranslatef(0.0, 0.5, 0.0)
+        pyglet.graphics.draw(24, GL_LINES, ('v3f', (
+            +0.5, +0.5, +0.5, -0.5, +0.5, +0.5,
+            -0.5, +0.5, +0.5, -0.5, +0.5, -0.5,
+            -0.5, +0.5, -0.5, +0.5, +0.5, -0.5,
+            +0.5, +0.5, -0.5, +0.5, +0.5, +0.5,
+            
+            +0.5, -0.5, +0.5, -0.5, -0.5, +0.5,
+            -0.5, -0.5, +0.5, -0.5, -0.5, -0.5,
+            -0.5, -0.5, -0.5, +0.5, -0.5, -0.5,
+            +0.5, -0.5, -0.5, +0.5, -0.5, +0.5,
+            
+            +0.5, +0.5, +0.5, +0.5, -0.5, +0.5,
+            -0.5, +0.5, +0.5, -0.5, -0.5, +0.5,
+            -0.5, +0.5, -0.5, -0.5, -0.5, -0.5,
+            +0.5, +0.5, -0.5, +0.5, -0.5, -0.5,
+        )))
+        glDisable(GL_BLEND)
+        glPopMatrix()
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         self.angular_speed += Vector(-dx*self.factor*0.003, 0, -dy*self.factor*0.003)

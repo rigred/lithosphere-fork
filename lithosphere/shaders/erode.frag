@@ -48,6 +48,6 @@ void main(){
     }
     normal = normalize(normal/8.0);
     result = result/count;
-    float factor = clamp(1.0 + dot(normal, vec3(0.0, 1.0, 0.0)), 0.05, 0.95);
-    gl_FragColor = vec4(mix(height, result, factor));
+    float factor = (dot(normal, vec3(0.0, 1.0, 0.0))+1.5)*5.0;
+    gl_FragColor = vec4(mix(height, result, clamp(factor, 0.0, 0.95)));
 }

@@ -5,7 +5,7 @@
     :license: GNU AGPL v3 or later, see LICENSE for more details.
 """
 
-from halogen import Column, Row, Button
+from halogen import Column, Row, Button, Node
 
 class Toolbar(object):
     def __init__(self, application):
@@ -17,9 +17,15 @@ class Toolbar(object):
         Button('Open').append_to(self.col1).on_click = application.dialogs.open
         Button('Save').append_to(self.col1).on_click = application.dialogs.save
         Button('New').append_to(self.col1).on_click = application.empty
+        Node().add_class('seperator').append_to(self.col1)
+
 
     def add(self, type):
-        button = Button(type.__name__).append_to(self.col2)
+        if self.col1.length < 8:
+            button = Button(type.__name__).append_to(self.col1)
+        else:
+            button = Button(type.__name__).append_to(self.col2)
+
         @button.event
         def on_click():
             type(self.application)

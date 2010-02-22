@@ -13,13 +13,17 @@ from .util import Output, Input, quad, nested, LabelSlider, connect
 from .node import Node
 
 class Base(Node):
-    def __init__(self, label, application):
-        Node.__init__(self, label, application)
+    def __init__(self, application):
+        Node.__init__(self, self.label, application)
         self.inout = Area().append_to(self.column).add_class('inout')
         self.input = Input(self).append_to(self.inout)
         self.output = Output(self).append_to(self.inout)
-        self.repeat = LabelSlider('Repeat', start=0.01).insert_before(self.inout)
+        self.repeat = LabelSlider('Repeat', start=0.0).insert_before(self.inout)
         self.updated = False
+        
+        self.shader = application.shader(self.shader)
+        self.shader.vars.texture = Sampler2D(GL_TEXTURE0)
+        self.shader.vars.offsets = 1.0/self.texture.width, 1.0/self.texture.height
     
     @property
     def revision(self):
@@ -47,19 +51,7 @@ class Base(Node):
         if input_id:
             node = instances[input_id]
             connect(node, self.input)
-
-class Gaussian(Base):
-    def __init__(self, application):
-        Base.__init__(self, 'Gaussian', application)
-        
-        self.shader_x = application.shader('gaussian_x.frag')
-        self.shader_x.vars.texture = Sampler2D(GL_TEXTURE0)
-        self.shader_x.vars.offsets = 1.0/self.texture.width, 1.0/self.texture.height
-        
-        self.shader_y = application.shader('gaussian_y.frag')
-        self.shader_y.vars.texture = Sampler2D(GL_TEXTURE0)
-        self.shader_y.vars.offsets = 1.0/self.texture.width, 1.0/self.texture.height
-
+    
     def update(self):
         if self.input.source:
             self.input.source.update()
@@ -73,68 +65,36 @@ class Gaussian(Base):
                 output.unit = GL_TEXTURE0
                 temp = self.application.temp
                 temp.unit = GL_TEXTURE0
+                shader = self.shader
 
                 fbo = self.application.framebuffer
-                fbo.textures[0] = temp
-                with nested(view, fbo, self.shader_x, input):
+                fbo.textures[0] = output
+                with nested(view, fbo, shader, input):
                     quad(output.width, output.height)
                 
-                fbo.textures[0] = output
-                with nested(view, fbo, self.shader_y, temp):
-                    quad(output.width, output.height)
-
                 for i in range(int(self.repeat.value*100.0)):
                     fbo.textures[0] = temp
-                    with nested(view, fbo, self.shader_x, output):
+                    with nested(view, fbo, shader, output):
                         quad(output.width, output.height)
                     
                     fbo.textures[0] = output
-                    with nested(view, fbo, self.shader_y, temp):
+                    with nested(view, fbo, shader, temp):
                         quad(output.width, output.height)
 
                 self.updated = revision
                 return True
     
+class Gaussian(Base):
+    label = 'Gaussian' 
+    shader = 'gaussian.frag'
+
 class Erode(Base):
-    def __init__(self, application):
-        Base.__init__(self, 'Erode', application)
+    label = 'Erode'
+    shader = 'erode.frag'
+
+class Steep(Base):
+    label = 'Steep'
+    shader = 'steep.frag'
+    
         
-        self.shader = application.shader('erode.frag')
-        self.shader.vars.texture = Sampler2D(GL_TEXTURE0)
-        self.shader.vars.offsets = 1.0/self.texture.width, 1.0/self.texture.height
-        
-
-    def update(self):
-        if self.input.source:
-            self.input.source.update()
-            revision = self.revision
-
-            if revision != self.updated:
-                view = self.application.processing_view
-
-                input = self.input.source.texture
-                input.unit = GL_TEXTURE0
-                output = self.texture
-                output.unit = GL_TEXTURE0
-                temp = self.application.temp
-                temp.unit = GL_TEXTURE0
-                self.shader.vars.invert = False
-
-                fbo = self.application.framebuffer
-                fbo.textures[0] = output
-                with nested(view, fbo, self.shader, input):
-                    quad(output.width, output.height)
-            
-                for i in range(int(self.repeat.value*100.0)):
-                    fbo.textures[0] = temp
-                    with nested(view, fbo, self.shader, output):
-                        quad(output.width, output.height)
-                    
-                    fbo.textures[0] = output
-                    with nested(view, fbo, self.shader, temp):
-                        quad(output.width, output.height)
-
-                self.updated = revision
-                return True
-
-nodes = Gaussian, Erode
+nodes = Gaussian, Erode, Steep

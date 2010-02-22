@@ -137,6 +137,10 @@ Output{
     width: 80px;
 }
 
+#toolbar > Column{
+    top: 0px;
+}
+
 Area.inout{
     width: 180px;
     height: 13px;
@@ -166,4 +170,9 @@ View3d:focus{
 Workspace{
     width: 100%;
     height: 100%;
+}
+
+Node.seperator{
+    width: 100%;
+    height: 16px;
 }
