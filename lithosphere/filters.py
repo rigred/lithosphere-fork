@@ -9,7 +9,7 @@ from halogen import Widget, Column, Area
 from gletools import Sampler2D
 from pyglet.gl import *
 
-from .util import Output, Input, quad, nested, LabelSlider, connect
+from .util import Output, Input, quad, nested, LabelSlider, LabelCheckbox, connect
 from .node import Node
 
 class Base(Node):
@@ -18,24 +18,25 @@ class Base(Node):
         self.inout = Area().append_to(self.column).add_class('inout')
         self.input = Input(self).append_to(self.inout)
         self.output = Output(self).append_to(self.inout)
-        self.repeat = LabelSlider('Repeat', start=0.0).insert_before(self.inout)
         self.updated = False
         
         self.shader = application.shader(self.shader)
         self.shader.vars.texture = Sampler2D(GL_TEXTURE0)
         self.shader.vars.offsets = 1.0/self.texture.width, 1.0/self.texture.height
+
+        self._parameters = dict()
     
     @property
     def revision(self):
-        if self.input.source:
-            return hash((self.__class__.__name__, self.repeat.value, self.input.source.revision))
-        else:
-            return hash((self.__class__.__name__, self.repeat.value))
+        source_revision = self.input.source.revision if self.input.source else None
+        parameters = tuple((name, param.value) for name, param in self._parameters.items())
+        return hash((self.__class__.__name__, source_revision, parameters))
     
     def get_parameters(self):
-        return dict(repeat=self.repeat.value)
+        return dict((name, param.value) for name, param in self._parameters.items())
     def set_parameters(self, values):
-        self.repeat.value = values['repeat']
+        for name, value in values.items():
+            self._parameters[name].value = value
 
     parameters = property(get_parameters, set_parameters)
     del get_parameters, set_parameters
@@ -58,43 +59,70 @@ class Base(Node):
             revision = self.revision
 
             if revision != self.updated:
-                view = self.application.processing_view
-                input = self.input.source.texture
-                input.unit = GL_TEXTURE0
-                output = self.texture
-                output.unit = GL_TEXTURE0
-                temp = self.application.temp
-                temp.unit = GL_TEXTURE0
-                shader = self.shader
-
-                fbo = self.application.framebuffer
-                fbo.textures[0] = output
-                with nested(view, fbo, shader, input):
-                    quad(output.width, output.height)
-                
-                for i in range(int(self.repeat.value*100.0)):
-                    fbo.textures[0] = temp
-                    with nested(view, fbo, shader, output):
-                        quad(output.width, output.height)
-                    
-                    fbo.textures[0] = output
-                    with nested(view, fbo, shader, temp):
-                        quad(output.width, output.height)
-
+                self.compute()
                 self.updated = revision
                 return True
+
+    def update_shader(self):
+        pass
     
-class Gaussian(Base):
+    def compute(self):
+        self.update_shader()
+        shader = self.shader
+        input = self.input.source.texture
+        output = self.texture
+        self.apply(shader, output, input)
+
+class Repeatable(Base):
+    def __init__(self, application):
+        Base.__init__(self, application)
+        self.repeat = LabelSlider('Repeat', start=0.0).insert_before(self.inout)
+        self._parameters['repeat'] = self.repeat
+
+    def compute(self):
+        self.update_shader()
+        shader = self.shader
+        input = self.input.source.texture
+        output = self.texture
+        tmp = self.application.temp
+        self.apply(shader, output, input)
+        
+        for i in range(int(self.repeat.value*100.0)):
+            self.apply(shader, tmp, output)
+            self.apply(shader, output, tmp)
+    
+class Gaussian(Repeatable):
     label = 'Gaussian' 
     shader = 'gaussian.frag'
 
-class Erode(Base):
+class Erode(Repeatable):
     label = 'Erode'
     shader = 'erode.frag'
+
+    def __init__(self, application):
+        Repeatable.__init__(self, application) 
+        self.shallow = LabelCheckbox('Shallow', checked=False).insert_before(self.inout)
+        self._parameters['shallow'] = self.shallow
+        self.invert = LabelCheckbox('Invert', checked=False).insert_before(self.inout)
+        self._parameters['invert'] = self.invert
+        self.rough = LabelCheckbox('Rough', checked=False).insert_before(self.inout)
+        self._parameters['rough'] = self.rough
+    
+    def update_shader(self):
+        self.shader.vars.invert = self.invert.value
+        self.shader.vars.shallow = self.shallow.value
+        self.shader.vars.rough = self.rough.value
 
 class Steep(Base):
     label = 'Steep'
     shader = 'steep.frag'
+
+    def __init__(self, application):
+        Base.__init__(self, application)
+        self.invert = LabelCheckbox('Invert').insert_before(self.inout)
+        self._parameters['invert'] = self.invert
+
+    def update_shader(self):
+        self.shader.vars.invert = self.invert.value
     
-        
 nodes = Gaussian, Erode, Steep

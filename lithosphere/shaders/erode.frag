@@ -1,16 +1,17 @@
 uniform sampler2D texture;
 uniform vec2 offsets;
 const float pih = 1.0/(3.14159265358979323846264*0.5);
+uniform bool invert, shallow, rough;
 
 const vec2 neighbors[] = {
-//    vec2(1, 1),
-//    vec2(-1, -1),
-//    vec2(-1, 1),
-//    vec2(1, -1),
     vec2(-1, 0),
     vec2(0, 1),
     vec2(0, -1),
-    vec2(1, 0)
+    vec2(1, 0),
+    vec2(1, 1),
+    vec2(-1, -1),
+    vec2(-1, 1),
+    vec2(1, -1)
 };
 
 
@@ -35,16 +36,32 @@ void main(){
 
     float count = 1.0;
     float result = pos.y;
-    for(int i=0; i<4; i++){
+    int end = 8;
+    if(rough){
+        end = 4;
+    }
+
+    for(int i=0; i<end; i++){
         vec3 neighbor = get(uv+neighbors[i]*offsets);
-        if(neighbor.y < pos.y){
-            result += neighbor.y;
-            count += 1.0;
+        if(invert){
+            if(neighbor.y > pos.y){
+                result += neighbor.y;
+                count += 1.0;
+            }
+        }
+        else{
+            if(neighbor.y < pos.y){
+                result += neighbor.y;
+                count += 1.0;
+            }
         }
     }
     vec3 normal = get_normal(pos);
     //float factor = 1.0-acos(dot(normal, vec3(0.0, 1.0, 0.0)))*pih;
     float factor = dot(normal, vec3(0.0, 1.0, 0.0));
+    if(shallow){
+        factor = 1.0-factor;
+    }
     result = mix(result/count, pos.y, factor);
     gl_FragColor = vec4(result);
 }

@@ -66,10 +66,13 @@ class Application(object):
         self.empty()
 
         instances = dict()
+        nodes_data = dict()
         for id, node_data in data['nodes'].items():
             instances[id] = self.node_factory.create(node_data)
+            nodes_data[id] = node_data
 
-        for instance, (id, node_data) in zip(instances.values(), data['nodes'].items()):
+        for id, instance in instances.items():
+            node_data = nodes_data[id]
             instance.reconnect(node_data['sources'], instances)
 
         self.terrain.open(data['terrain'], instances)
@@ -106,7 +109,7 @@ class Application(object):
             )
 
         terrain = self.terrain
-        if terrain.input.source:
+        if terrain:
             data['terrain'] = dict(
                 offset = dict(x=terrain.widget.rect.x, y = terrain.widget.rect.y),
                 source = str(id(terrain.input.source)) if terrain.input.source else None

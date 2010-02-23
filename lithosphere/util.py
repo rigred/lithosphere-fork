@@ -1,4 +1,4 @@
-from halogen import Slot, Dropable, Row, Label, Slider
+from halogen import Slot, Dropable, Row, Label, Slider, Checkbox
 from pyglet.graphics import draw
 from pyglet.gl import *
 from contextlib import nested
@@ -15,6 +15,21 @@ class LabelSlider(Row):
         self.slider.value = value
     value = property(get_value, set_value)
     del get_value, set_value
+
+class LabelCheckbox(Row):
+    def __init__(self, title, checked=False):
+        Row.__init__(self)
+        Label(title).append_to(self)
+        self.checkbox = Checkbox(checked=checked).append_to(self)
+    
+    def get_value(self):
+        return self.checkbox.checked
+    def set_value(self, checked):
+        if checked:
+            self.checkbox.check()
+        else:
+            self.checkbox.uncheck()
+    value = property(get_value, set_value)
 
 class Input(Slot):
     def __init__(self, node):

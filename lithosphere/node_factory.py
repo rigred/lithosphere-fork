@@ -1,6 +1,6 @@
-import noise, binops, filters, mix
+import noise, binops, filters, mix, adjust
 
-modules = noise, binops, filters, mix
+modules = noise, binops, filters, mix, adjust
 
 class NodeFactory(object):
     def __init__(self, application):

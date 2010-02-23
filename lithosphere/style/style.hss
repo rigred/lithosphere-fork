@@ -176,3 +176,13 @@ Node.seperator{
     width: 100%;
     height: 16px;
 }
+
+Checkbox{
+    background: file(images/checkbox_off.png) image;
+    width: 27px;
+    height: 13px;
+}
+
+Checkbox:on{
+    background: file(images/checkbox_on.png) image;
+}

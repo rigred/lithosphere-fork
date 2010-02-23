@@ -1,3 +1,4 @@
+from pyglet.gl import *
 from halogen import Widget, Column, Label, Button, Area
 from .util import Output, LabelSlider, quad, nested
 
@@ -37,3 +38,15 @@ class Node(object):
 
     def reconnect(self, data, instances):
         pass
+    
+    def apply(self, shader, target, *sources):
+        view = self.application.processing_view
+        
+        for i, source in enumerate(sources):
+            source.unit = GL_TEXTURE0 + i
+
+        fbo = self.application.framebuffer
+        fbo.textures[0] = target
+
+        with nested(view, fbo, shader, *sources):
+            quad(target.width, target.height)
