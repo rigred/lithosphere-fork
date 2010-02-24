@@ -157,8 +157,8 @@ class View3d(Node):
         )
 
     def on_mouse_release(self, x, y, button, modifiers):
-        self.root.window.set_mouse_position(*self.mousepos)
         self.root.window.set_exclusive_mouse(False)
+        self.root.window.set_mouse_position(*self.mousepos)
         self.root.window.remove_handlers(
             on_mouse_release    = self.on_mouse_release,
             on_mouse_drag       = self.on_mouse_drag,
