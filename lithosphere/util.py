@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+
+"""
+    :copyright: 2010 by Florian Boesch <pyalot@gmail.com>.
+    :license: GNU AGPL v3 or later, see LICENSE for more details.
+"""
+
 from halogen import Slot, Dropable, Row, Label, Slider, Checkbox
 from pyglet.graphics import draw
 from pyglet.gl import *
