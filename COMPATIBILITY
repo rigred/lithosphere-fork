@@ -2,5 +2,10 @@ Known working configurations:
 linux, nvidia gf285 gtx, driver 185.18.36
 linux, nvidia gf8800 gts, driver 185.18.36
 
+Non blocking Issues with configurations:
+- Occasionally crashes when trying to dlload GL, does not happen with the correct shebang (#!/usr/bin/env python) 
+    linux, ubuntu 9.10, nvidia gf285 gtx, driver 185.18.36
+    linux, ubuntu 9.10, nvidia gf8800 gts, driver 185.18.36
+
 Known broken configurations:
 linux, nvidia gf9800 GTX+, driver 173.14.20 --> segfault on simplex.frag
