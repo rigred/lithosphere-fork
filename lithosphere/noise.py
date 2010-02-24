@@ -45,7 +45,6 @@ class Simplex(Node):
                 quad(self.texture.width, self.texture.height)
                
             glEnable(GL_BLEND)
-            #glBlendFunc(GL_SRC_ALPHA, GL_ONE) #maybe interesting too
             glBlendFunc(GL_ONE, GL_ONE)
             for i in range(1, octaves+2):
                 self.shader.vars['size'] = size * step**i

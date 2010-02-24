@@ -1,0 +1,6 @@
+Known working configurations:
+linux, nvidia gf285 gtx, driver 185.18.36
+linux, nvidia gf8800 gts, driver 185.18.36
+
+Known broken configurations:
+linux, nvidia gf9800 GTX+, driver 173.*.*

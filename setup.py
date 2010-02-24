@@ -28,11 +28,13 @@ setup(
     include_package_data    = True,
     package_data            = {
         'lithosphere':[
-            'style/*.css',
+            'style/*.hss',
             'style/images/*.png',
             'style/fonts/*.ttf',
-            'shaders/*.frag*',
-            'shaders/lighting/*.frag*',
+            'shaders/*.frag',
+            'shaders/*.vert',
+            'shaders/lighting/*.frag',
+            'shaders/lighting/*.vert',
         ]
     },
     packages                = ['lithosphere'],
