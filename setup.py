@@ -26,8 +26,17 @@ setup(
     maintainer_email        = 'pyalot@gmail.com',
     zip_safe                = False,
     include_package_data    = True,
+    package_data            = {
+        'lithosphere':[
+            'style/*.css',
+            'style/images/*.png',
+            'style/fonts/*.ttf',
+            'shaders/*.frag*',
+            'shaders/lighting/*.frag*',
+        ]
+    },
     packages                = ['lithosphere'],
     scripts                 = ['lithosphere/lithosphere'],
-    install_requires        = ['setuptools', 'pyglet', 'halogen', 'gletools'],
+    install_requires        = ['setuptools', 'pyglet', 'halogen', 'gletools', 'UniversalDialogs'],
     platforms               = ['any'],
 )

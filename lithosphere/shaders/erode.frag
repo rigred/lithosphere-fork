@@ -62,6 +62,9 @@ void main(){
     if(shallow){
         factor = 1.0-factor;
     }
+    else{
+        factor = factor-0.05*count;
+    }
     result = mix(result/count, pos.y, factor);
     gl_FragColor = vec4(result);
 }

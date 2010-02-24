@@ -1,0 +1,142 @@
+{
+    "nodes": {
+        "180677740": {
+            "offset": {
+                "x": 696, 
+                "y": 290
+            }, 
+            "parameters": [], 
+            "sources": {
+                "op1": "180711276", 
+                "op2": "180708300"
+            }, 
+            "type": "Multiply"
+        }, 
+        "180708300": {
+            "offset": {
+                "x": 439, 
+                "y": 85
+            }, 
+            "parameters": {
+                "invert": false, 
+                "repeat": 0.55681818181818155, 
+                "rough": true, 
+                "shallow": true
+            }, 
+            "sources": {
+                "input": "182227852"
+            }, 
+            "type": "Erode"
+        }, 
+        "180711276": {
+            "offset": {
+                "x": 442, 
+                "y": 242
+            }, 
+            "parameters": {
+                "invert": false, 
+                "repeat": 0.15909090909090917, 
+                "rough": true, 
+                "shallow": false
+            }, 
+            "sources": {
+                "input": "182227852"
+            }, 
+            "type": "Erode"
+        }, 
+        "182227852": {
+            "offset": {
+                "x": 226, 
+                "y": 152
+            }, 
+            "parameters": {
+                "falloff": 0.14999999999999999, 
+                "height": 0.70454545454545436, 
+                "octaves": 0.17045454545454544, 
+                "offset": 0.0, 
+                "size": 0.10000000000000001, 
+                "step": 0.80000000000000004
+            }, 
+            "sources": {}, 
+            "type": "Simplex"
+        }, 
+        "182230444": {
+            "offset": {
+                "x": 1143, 
+                "y": 30
+            }, 
+            "parameters": [], 
+            "sources": {
+                "op1": "183127116", 
+                "op2": "184031852"
+            }, 
+            "type": "Multiply"
+        }, 
+        "183127116": {
+            "offset": {
+                "x": 942, 
+                "y": 133
+            }, 
+            "parameters": {
+                "invert": false
+            }, 
+            "sources": {
+                "input": "180677740"
+            }, 
+            "type": "Steep"
+        }, 
+        "184031852": {
+            "offset": {
+                "x": 698, 
+                "y": 61
+            }, 
+            "parameters": {
+                "falloff": 0.019318181818181835, 
+                "height": 0.1463636363636365, 
+                "octaves": 0.21613636363636293, 
+                "offset": 0.0, 
+                "size": 0.22568181818181934, 
+                "step": 0.77000000000000224
+            }, 
+            "sources": {}, 
+            "type": "Simplex"
+        }, 
+        "184751276": {
+            "offset": {
+                "x": 1192, 
+                "y": 260
+            }, 
+            "parameters": [], 
+            "sources": {
+                "op1": "182230444", 
+                "op2": "180677740"
+            }, 
+            "type": "Add"
+        }
+    }, 
+    "terrain": {
+        "offset": {
+            "x": 1437, 
+            "y": 258
+        }, 
+        "source": "184751276"
+    }, 
+    "viewport": {
+        "position": [
+            -0.52182856745295292, 
+            0.49112167147917146, 
+            0.65759950696438885
+        ], 
+        "rotation": [
+            2.5257000000000014, 
+            0.0, 
+            0.59539999999999949
+        ]
+    }, 
+    "workspace": {
+        "offset": {
+            "x": 1, 
+            "y": -24
+        }
+    }
+}
