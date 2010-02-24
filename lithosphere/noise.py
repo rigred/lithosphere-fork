@@ -16,7 +16,6 @@ class Simplex(Node):
         Node.__init__(self, 'Simplex', application)
         self.output = Output(self).append_to(self.column)
         self.shader = application.shader('simplex.frag')
-        self.shader.vars.texture = Sampler2D(GL_TEXTURE0)
 
         self.size = LabelSlider('Size', start=0.1).insert_before(self.output)
         self.height = LabelSlider('Height', start=0.5).insert_before(self.output)
@@ -44,14 +43,18 @@ class Simplex(Node):
 
             with nested(view, fbo, self.application.height_reset):
                 quad(self.texture.width, self.texture.height)
-                
+               
+            glEnable(GL_BLEND)
+            #glBlendFunc(GL_SRC_ALPHA, GL_ONE) #maybe interesting too
+            glBlendFunc(GL_ONE, GL_ONE)
             for i in range(1, octaves+2):
                 self.shader.vars['size'] = size * step**i
                 self.shader.vars['offset'] = offset * step**i
                 self.shader.vars['height'] = height / i**falloff
 
-                with nested(view, self.texture, fbo, self.shader):
+                with nested(view, fbo, self.shader):
                     quad(self.texture.width, self.texture.height)
+            glDisable(GL_BLEND)
 
             self.updated = revision
 

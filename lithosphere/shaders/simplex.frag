@@ -1,5 +1,4 @@
 uniform float height, size, offset;
-uniform sampler2D texture;
 
 const int p[256] = {151,160,137,91,90,15,
 131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
@@ -73,6 +72,5 @@ float noise(const vec2 value){
 }
 
 void main(){
-    float start = texture2D(texture, gl_TexCoord[0].st).r;
-    gl_FragColor = start + vec4(noise((gl_TexCoord[0].xy-0.5)*size+offset)) * height;
+    gl_FragColor = vec4(noise((gl_TexCoord[0].xy-0.5)*size+offset)) * height;
 }

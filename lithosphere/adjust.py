@@ -5,7 +5,7 @@
     :license: GNU AGPL v3 or later, see LICENSE for more details.
 """
 
-from halogen import Widget, Column, Area
+from halogen import Area
 from gletools import Sampler2D
 from pyglet.gl import *
 

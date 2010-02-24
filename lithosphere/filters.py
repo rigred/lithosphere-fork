@@ -9,7 +9,7 @@ from halogen import Widget, Column, Area
 from gletools import Sampler2D
 from pyglet.gl import *
 
-from .util import Output, Input, quad, nested, LabelSlider, LabelCheckbox, connect
+from .util import Output, Input, quad, LabelSlider, LabelCheckbox, connect
 from .node import Node
 
 class Base(Node):
