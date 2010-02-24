@@ -72,5 +72,6 @@ float noise(const vec2 value){
 }
 
 void main(){
-    gl_FragColor = vec4(noise((gl_TexCoord[0].xy-0.5)*size+offset)) * height;
+    float value = noise((gl_TexCoord[0].xy-0.5)*size+offset)*height;
+    gl_FragColor = vec4(value, value, value, 1.0);
 }
