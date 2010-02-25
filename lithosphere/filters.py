@@ -113,6 +113,24 @@ class Erode(Repeatable):
         self.shader.vars.shallow = self.shallow.value
         self.shader.vars.rough = self.rough.value
 
+class Wind(Repeatable):
+    label = 'Wind'
+    shader = 'wind.frag'
+    
+    def __init__(self, application):
+        Repeatable.__init__(self, application) 
+        self.direction = LabelSlider('Dir', start=0.0).insert_before(self.inout)
+        self.strengh = LabelSlider('Strengh', start=0.5).insert_before(self.inout)
+        self.strengh2 = LabelSlider('Strengh2', start=0.5).insert_before(self.inout)
+        self._parameters['direction'] = self.direction
+        self._parameters['strengh'] = self.strengh
+        self._parameters['strengh2'] = self.strengh2
+    
+    def update_shader(self):
+        self.shader.vars.direction = self.direction.value
+        self.shader.vars.strengh = self.strengh.value * 1.35
+        self.shader.vars.strengh2 = self.strengh2.value * 2.0
+
 class Incline(Base):
     label = 'Incline'
     shader = 'steep.frag'
@@ -140,4 +158,4 @@ class Step(Base):
         self.shader.vars.low = self.bottom.value-0.25
         self.shader.vars.high = self.bottom.value + self.height.value
     
-nodes = Gaussian, Erode, Incline, Step
+nodes = Gaussian, Erode, Incline, Step, Wind

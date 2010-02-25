@@ -21,7 +21,7 @@ class Toolbar(object):
 
 
     def add(self, type):
-        if self.col1.length < 8:
+        if self.col1.length < 9:
             button = Button(type.__name__).append_to(self.col1)
         else:
             button = Button(type.__name__).append_to(self.col2)

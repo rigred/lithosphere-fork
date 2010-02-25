@@ -95,10 +95,6 @@ class Power(Binop):
     label = 'Power'
     shader = 'power.frag'
 
-class Power(Binop):
-    label = 'Power'
-    shader = 'power.frag'
-
 class Max(Binop):
     label = 'Max'
     shader = 'max.frag'
@@ -107,4 +103,4 @@ class Min(Binop):
     label = 'Min'
     shader = 'min.frag'
 
-nodes = Add, Subtract, Multiply, Divide, Power, Min, Max
+nodes = Add, Subtract, Multiply, Power, Min, Max
