@@ -113,8 +113,8 @@ class Erode(Repeatable):
         self.shader.vars.shallow = self.shallow.value
         self.shader.vars.rough = self.rough.value
 
-class Steep(Base):
-    label = 'Steep'
+class Incline(Base):
+    label = 'Incline'
     shader = 'steep.frag'
 
     def __init__(self, application):
@@ -124,5 +124,20 @@ class Steep(Base):
 
     def update_shader(self):
         self.shader.vars.invert = self.invert.value
+
+class Step(Base):
+    label = 'Step'
+    shader = 'step.frag'
     
-nodes = Gaussian, Erode, Steep
+    def __init__(self, application):
+        Base.__init__(self, application)
+        self.bottom = LabelSlider('Bottom', start=0.25).insert_before(self.inout)
+        self.height = LabelSlider('Hight', start=1.0).insert_before(self.inout)
+        self._parameters['bottom'] = self.bottom
+        self._parameters['height'] = self.height
+
+    def update_shader(self):
+        self.shader.vars.low = self.bottom.value-0.25
+        self.shader.vars.high = self.bottom.value + self.height.value
+    
+nodes = Gaussian, Erode, Incline, Step
