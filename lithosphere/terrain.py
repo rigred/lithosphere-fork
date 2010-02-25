@@ -97,17 +97,7 @@ class Terrain(object):
             return None
     
     def draw(self):
-        eyepos = self.application.viewport.pos * 1.0
-        eyepos.x += 0.01
         glPushMatrix()
-        glColor4f(1.0, 0.0, 0.0, 1.0)
-        glLineWidth(10)
-        glBegin(GL_LINES)
-        glVertex3f(0, 0.5, 0.5)
-        #glVertex3f(*eyepos)
-        glVertex3f(0.5, 0.5, 0.5)
-        glEnd()
         glTranslatef(-0.5, 0, -0.5)
-        glColor4f(0.5, 0.5, 0.5, 1.0)
         self.vbo.draw(GL_TRIANGLES)
         glPopMatrix()
