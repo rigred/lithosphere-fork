@@ -1,0 +1,160 @@
+{
+    "nodes": {
+        "189657388": {
+            "offset": {
+                "x": 337, 
+                "y": 57
+            }, 
+            "parameters": {
+                "repeat": 0.22999999999999984
+            }, 
+            "sources": {
+                "input": "189667724"
+            }, 
+            "type": "Gaussian"
+        }, 
+        "189667724": {
+            "offset": {
+                "x": 435, 
+                "y": 233
+            }, 
+            "parameters": {
+                "invert": false, 
+                "repeat": 0.030227272727272526, 
+                "rough": true, 
+                "shallow": true
+            }, 
+            "sources": {
+                "input": "191212364"
+            }, 
+            "type": "Erode"
+        }, 
+        "191211148": {
+            "offset": {
+                "x": 777, 
+                "y": 56
+            }, 
+            "parameters": {
+                "direction": 0.0, 
+                "repeat": 0.19249999999999989, 
+                "strengh": 0.5, 
+                "strengh2": 0.5
+            }, 
+            "sources": {
+                "input": "193029196"
+            }, 
+            "type": "Wind"
+        }, 
+        "191212364": {
+            "offset": {
+                "x": 225, 
+                "y": 150
+            }, 
+            "parameters": {
+                "falloff": 0.087727272727272987, 
+                "height": 0.49090909090909057, 
+                "octaves": 0.26068181818181785, 
+                "offset": 0.6974999999999989, 
+                "size": 0.12909090909090912, 
+                "step": 0.51318181818181796
+            }, 
+            "sources": {}, 
+            "type": "Simplex"
+        }, 
+        "192069100": {
+            "offset": {
+                "x": 998, 
+                "y": 288
+            }, 
+            "parameters": [], 
+            "sources": {
+                "op1": "189667724", 
+                "op2": "192904908"
+            }, 
+            "type": "Add"
+        }, 
+        "192105004": {
+            "offset": {
+                "x": 1248, 
+                "y": 261
+            }, 
+            "parameters": [], 
+            "sources": {
+                "op1": "192069100", 
+                "op2": "193031980"
+            }, 
+            "type": "Max"
+        }, 
+        "192904908": {
+            "offset": {
+                "x": 694, 
+                "y": 210
+            }, 
+            "parameters": {
+                "falloff": 0.0, 
+                "height": 0.21113636363636434, 
+                "octaves": 0.43295454545454559, 
+                "offset": 0.0, 
+                "size": 0.14454545454545553, 
+                "step": 0.80000000000000004
+            }, 
+            "sources": {}, 
+            "type": "Simplex"
+        }, 
+        "193029196": {
+            "offset": {
+                "x": 553, 
+                "y": 57
+            }, 
+            "parameters": {
+                "invert": false, 
+                "repeat": 0.099090909090909535, 
+                "rough": false, 
+                "shallow": false
+            }, 
+            "sources": {
+                "input": "189657388"
+            }, 
+            "type": "Erode"
+        }, 
+        "193031980": {
+            "offset": {
+                "x": 998, 
+                "y": 57
+            }, 
+            "parameters": {
+                "factor": 0.043181818181818106, 
+                "offset": 0.50977272727272793
+            }, 
+            "sources": {
+                "input": "191211148"
+            }, 
+            "type": "Adjust"
+        }
+    }, 
+    "terrain": {
+        "offset": {
+            "x": 1370, 
+            "y": 50
+        }, 
+        "source": "192105004"
+    }, 
+    "viewport": {
+        "position": [
+            -0.43541687216654262, 
+            0.53449540443671961, 
+            0.54988643348452892
+        ], 
+        "rotation": [
+            8.8167000000000026, 
+            0.0, 
+            0.64580000000000182
+        ]
+    }, 
+    "workspace": {
+        "offset": {
+            "x": 0, 
+            "y": 0
+        }
+    }
+}

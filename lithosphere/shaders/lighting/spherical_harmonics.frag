@@ -134,12 +134,12 @@ const vec3 L21  = vec3( 0.0242531,  0.0279176,  0.0335200);
 const vec3 L22  = vec3(-0.2858534, -0.3235718, -0.3586478);
 #endif
 
-
-varying vec3 frag_normal, pos, frag_lightdir;
+uniform sampler2D normal_map;
 
 void main(){
     if(gl_FrontFacing){
-        const vec3 normal = normalize(frag_normal) * -1.0;
+        //const vec3 normal = normalize(frag_normal) * -1.0;
+        const vec3 normal = normalize(texture2D(normal_map, gl_TexCoord[0].st));
         const float x = normal.x;
         const float y = normal.z; 
         const float z = normal.y; 
@@ -158,6 +158,7 @@ void main(){
         diffuse *= gl_Color.rgb;
         
         gl_FragColor = vec4(diffuse, gl_Color.w);
+        //gl_FragColor = vec4(normal.xyz, 1.0);
     }
     else{
         gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);

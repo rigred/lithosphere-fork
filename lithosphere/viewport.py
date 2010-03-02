@@ -6,7 +6,7 @@
 """
 
 from halogen import Node, here
-from gletools import Projection, ShaderProgram, VertexShader, FragmentShader, DepthTest
+from gletools import Projection, ShaderProgram, VertexShader, FragmentShader, DepthTest, Sampler2D
 from pyglet.gl import *
 from pyglet.window.key import S, D, F, E, W, R, LSHIFT
 
@@ -25,23 +25,10 @@ class View3d(Node):
         Node.__init__(self)
         self.application = application
 
-        self.sun = ShaderProgram(
-            VertexShader.open(here('shaders/lighting/default.vert')),
-            FragmentShader.open(here('shaders/lighting/sun.frag')),
-            color = (1.0, 1.0, 1.0),
-            direction = (-0.5, -0.5, 0.2),
-            ambient = (0.1, 0.1, 0.1),
+        self.spherical_harmonics = self.load_lighting(
+            'spherical_harmonics.frag',
+            normal_map = Sampler2D(GL_TEXTURE0),
         )
-
-        self.hemisphere = self.load_lighting('hemisphere.frag',
-            ground_color = hex2color('4e4a3e'),
-            sky_color = hex2color('e4f5fb'),
-            direction = (-0.5, -0.5, 0.2),
-            ambient = (0.2, 0.2, 0.2),
-        )
-
-        self.spherical_harmonics = self.load_lighting('spherical_harmonics.frag')
-        
         self.light = self.spherical_harmonics
         
         self.speed = Vector(0, 0, 0)
@@ -63,7 +50,6 @@ class View3d(Node):
             FragmentShader.open(here('shaders/lighting/%s' % name)),
             **kwargs
         )
-        
 
     def update_view(self, delta):
         self.dampen()
@@ -105,7 +91,6 @@ class View3d(Node):
         rect = self.rect
         with nested(
             Projection(rect.left, rect.bottom, rect.width, rect.height, fov=40, near=0.001, far=4.0), 
-            self.light,
             DepthTest,
         ):
             glPushMatrix() 
@@ -115,8 +100,9 @@ class View3d(Node):
                 self.pos.x + self.at.x, self.pos.y + self.at.y, self.pos.z + self.at.z,
                 self.up.x, self.up.y, self.up.z,
             )
-            glColor4f(0.5, 0.5, 0.5, 1.0)
-            self.application.terrain.draw()
+            glColor4f(0.8, 0.8, 0.8, 1.0)
+            with self.light:
+                self.application.terrain.draw()
             self.draw_unit_cube()
             glPopMatrix()
 

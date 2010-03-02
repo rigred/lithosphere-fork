@@ -19,9 +19,9 @@ class Terrain(object):
         )
         self.fbo.drawto = GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT
 
-        self.shader = application.shader('heightmap_normal.frag')
+        self.update_shader = application.shader('heightmap_normal.frag')
         self.reset = application.shader('reset.frag')
-        self.shader.vars.offsets = 1.0/width, 1.0/height
+        self.update_shader.vars.offsets = 1.0/width, 1.0/height
         self.vbo = self.generate_vbo(width, height)
         self.updated = False
 
@@ -34,12 +34,6 @@ class Terrain(object):
             for x in range(width):
                 offset = (x+z*width)*4
                 v4f[offset:offset+4] = x*width_factor, 0, z*height_factor, 1
-
-        n4f = (c_float*(width*height*4))()
-        for z in range(height):
-            for x in range(width):
-                offset = (x+z*width)*4
-                n4f[offset:offset+4] = 0, 1, 0, 0
 
         at = lambda x, y: x+y*width
         
@@ -58,7 +52,6 @@ class Terrain(object):
             pbo                 = True,
             indices             = indices,
             dynamic_draw_v4f    = v4f,
-            dynamic_draw_n4f    = n4f,
         )
 
     def open(self, data, instances):
@@ -76,16 +69,14 @@ class Terrain(object):
         if self.input.source:
             self.input.source.update()
             if revision != self.updated:
-                with nested(view, self.fbo, self.input.source.texture, self.shader):
+                with nested(view, self.fbo, self.input.source.texture, self.update_shader):
                     quad(self.width, self.height)
                     self.vbo.vertices.copy_from(self.vertex_texture)
-                    self.vbo.normals.copy_from(self.normal_texture)
         else:
             if revision != self.updated:
                 with nested(view, self.fbo, self.reset):
                     quad(self.width, self.height)
                     self.vbo.vertices.copy_from(self.vertex_texture)
-                    self.vbo.normals.copy_from(self.normal_texture)
 
         self.updated = revision
 
@@ -99,5 +90,6 @@ class Terrain(object):
     def draw(self):
         glPushMatrix()
         glTranslatef(-0.5, 0, -0.5)
-        self.vbo.draw(GL_TRIANGLES)
+        with self.normal_texture:
+            self.vbo.draw(GL_TRIANGLES)
         glPopMatrix()

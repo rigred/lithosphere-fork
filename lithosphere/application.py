@@ -139,14 +139,17 @@ class Application(object):
     def create_texture(self):
         return Texture(self.width, self.height, format=GL_LUMINANCE32F_ARB, clamp='st')
 
-    def shader(self, name):
-        if name in self.shaders:
-            return self.shaders[name]
+    def shader(self, *names):
+        if names in self.shaders:
+            return self.shaders[names]
         else:
-            shader = ShaderProgram(
+            shader = ShaderProgram(*[
                 FragmentShader.open(here('shaders/%s' % name))
-            )
-            self.shaders[name] = shader
+                if name.endswith('.frag') else
+                VertexShader.open(here('shaders/%s' % name))
+                for name in names
+            ])
+            self.shaders[names] = shader
             return shader
 
     def update(self, delta):
