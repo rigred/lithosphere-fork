@@ -22,8 +22,13 @@ from .node_factory import NodeFactory
 
 class Application(object):
     def __init__(self):
-        self.width = 512
-        self.height = 512
+        self.mesh_width = 512
+        self.mesh_height = 512
+
+        self.width = 1024
+        self.height = 1024
+        #self.width = 2048
+        #self.height = 2048
         self.shaders = {}
 
         self.framebuffer = Framebuffer()
@@ -39,11 +44,11 @@ class Application(object):
         self.work_area = Area(id='sidebar').append_to(self.root)
         self.workspace = Workspace().append_to(self.work_area)
         self.canvas = LineCanvas().append_to(self.workspace)
+        self.processing_view = Screen(0, 0, self.width, self.height)
         self.terrain = Terrain(self)
         self.toolbar = Toolbar(self)
         self.node_factory = NodeFactory(self)
         self.viewport = View3d(self).append_to(self.root)
-        self.processing_view = Screen(0, 0, self.width, self.height)
         pyglet.clock.schedule_interval(self.update, 0.05)
         self.temp = self.create_texture()
         self.height_reset = self.shader('height_reset.frag')

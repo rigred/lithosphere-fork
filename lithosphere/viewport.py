@@ -100,10 +100,10 @@ class View3d(Node):
                 self.pos.x + self.at.x, self.pos.y + self.at.y, self.pos.z + self.at.z,
                 self.up.x, self.up.y, self.up.z,
             )
-            glColor4f(0.8, 0.8, 0.8, 1.0)
+            glColor4f(0.6, 0.6, 0.6, 1.0)
             with self.light:
                 self.application.terrain.draw()
-            self.draw_unit_cube()
+            #self.draw_unit_cube() #makes problems (flickers)
             glPopMatrix()
 
     def draw_unit_cube(self):

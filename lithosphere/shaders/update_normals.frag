@@ -16,35 +16,35 @@ vec3 get_normal(vec3 p){
     float x = offsets.x;
     float z = offsets.y;
     // TODO maybe make this options, all models for normal calculation are interesting
-    /*
     return normalize((
-        compute_normal(p, get(p.x+x, p.z+z)) + 
-        compute_normal(p, get(p.x-x, p.z-z)) + 
-        compute_normal(p, get(p.x+x, p.z-z)) + 
-        compute_normal(p, get(p.x-x, p.z+z)) + 
-        compute_normal(p, get(p.x, p.z+z)) + 
-        compute_normal(p, get(p.x, p.z-z)) + 
-        compute_normal(p, get(p.x+x, p.z)) + 
-        compute_normal(p, get(p.x-x, p.z))
+        compute_normal(p, get(vec2(p.x+x, p.z+z))) + 
+        compute_normal(p, get(vec2(p.x-x, p.z-z))) + 
+        compute_normal(p, get(vec2(p.x+x, p.z-z))) + 
+        compute_normal(p, get(vec2(p.x-x, p.z+z))) + 
+        compute_normal(p, get(vec2(p.x, p.z+z))) + 
+        compute_normal(p, get(vec2(p.x, p.z-z))) + 
+        compute_normal(p, get(vec2(p.x+x, p.z))) + 
+        compute_normal(p, get(vec2(p.x-x, p.z)))
     )/8.0);
+    /*
     return normalize((
         compute_normal(p, get(p.x, p.z+z)) + 
         compute_normal(p, get(p.x, p.z-z)) + 
         compute_normal(p, get(p.x+x, p.z)) + 
         compute_normal(p, get(p.x-x, p.z))
     )/4.0);
-    */
     return normalize(vec3(
         get(vec2(p.x-x, p.z)).y - get(vec2(p.x+x, p.z)).y,
         x+z,
         get(vec2(p.x, p.z-z)).y - get(vec2(p.x, p.z+z)).y
     ));
+    */
 }
 
 void main(void){
     vec2 uv = gl_TexCoord[0].st;
     vec3 pos = get(uv);
     vec3 normal = get_normal(pos);
-    gl_FragData[0] = vec4(pos.x, pos.y, pos.z, 1.0);
-    gl_FragData[1] = vec4(normal.x, normal.y, normal.z, 1.0);
+    gl_FragData[0] = vec4(normal.x, normal.y, normal.z, 1.0);
+    //gl_FragColor = vec4(0,1,0,1);
 }

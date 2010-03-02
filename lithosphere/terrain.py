@@ -8,22 +8,29 @@ class Terrain(object):
     def __init__(self, application):
         self.application = application
         self.input = Input(self)
-        self.width, self.height = width, height = application.width, application.height
+        self.width, self.height = width, height = application.mesh_width, application.mesh_height
         self.widget = Widget('Terrain', self.input, id='terrain').append_to(application.workspace)
         
         self.vertex_texture = Texture(width, height, GL_RGBA32F)
-        self.normal_texture = Texture(width, height, GL_RGBA32F)
-        self.fbo = Framebuffer(
+        self.normal_texture = Texture(application.width, application.height, GL_RGBA32F)
+
+        self.vertex_fbo = Framebuffer(
             self.vertex_texture,
+        )
+        self.normal_fbo = Framebuffer(
             self.normal_texture,
         )
-        self.fbo.drawto = GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT
 
-        self.update_shader = application.shader('heightmap_normal.frag')
-        self.reset = application.shader('reset.frag')
-        self.update_shader.vars.offsets = 1.0/width, 1.0/height
+        self.update_vertex_shader = application.shader('update_vertex.frag')
+        self.update_normals_shader = application.shader('update_normals.frag')
+        self.update_normals_shader.vars.offsets = 1.0/application.width, 1.0/application.height
+
+        self.reset_vertex = application.shader('reset_vertex.frag')
+        self.reset_normals = application.shader('reset_normals.frag')
         self.vbo = self.generate_vbo(width, height)
-        self.updated = False
+
+        self.reset()
+        self.updated = True
 
     def generate_vbo(self, width, height):
         #as an acceleration the arrays could be prefilled in C
@@ -63,20 +70,29 @@ class Terrain(object):
             node = instances[input_id]
             connect(node, self.input)
 
+    def reset(self):
+        view = self.application.processing_view
+        with nested(view, self.vertex_fbo, self.reset_vertex):
+            quad(self.width, self.height)
+            self.vbo.vertices.copy_from(self.vertex_texture)
+        with nested(view, self.normal_fbo, self.reset_normals):
+            quad(self.application.width, self.application.height)
+
     def update(self):
         view = self.application.processing_view
         revision = self.revision
         if self.input.source:
             self.input.source.update()
             if revision != self.updated:
-                with nested(view, self.fbo, self.input.source.texture, self.update_shader):
+                with nested(view, self.vertex_fbo, self.input.source.texture, self.update_vertex_shader):
                     quad(self.width, self.height)
                     self.vbo.vertices.copy_from(self.vertex_texture)
+
+                with nested(view, self.normal_fbo, self.input.source.texture, self.update_normals_shader):
+                    quad(self.application.width, self.application.height)
         else:
             if revision != self.updated:
-                with nested(view, self.fbo, self.reset):
-                    quad(self.width, self.height)
-                    self.vbo.vertices.copy_from(self.vertex_texture)
+                self.reset()
 
         self.updated = revision
 
