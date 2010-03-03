@@ -25,10 +25,14 @@ class Application(object):
         self.mesh_width = 512
         self.mesh_height = 512
 
-        self.width = 1024
-        self.height = 1024
-        #self.width = 2048
-        #self.height = 2048
+        #self.width = 512
+        #self.height = 512
+        #self.width = 1024
+        #self.height = 1024
+        self.width = 2048
+        self.height = 2048
+        #self.width = 4096
+        #self.height = 4096
         self.shaders = {}
 
         self.framebuffer = Framebuffer()
@@ -142,7 +146,8 @@ class Application(object):
         #self.terrain.normal_texture.draw(200, 0)
 
     def create_texture(self):
-        return Texture(self.width, self.height, format=GL_LUMINANCE32F_ARB, clamp='st')
+        #return Texture(self.width, self.height, format=GL_LUMINANCE32F_ARB, clamp='st')
+        return Texture(self.width, self.height, format=GL_RGBA32F, clamp='st')
 
     def shader(self, *names):
         if names in self.shaders:

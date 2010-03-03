@@ -73,23 +73,42 @@ class Base(Node):
         output = self.texture
         self.apply(shader, output, input)
 
+import time
+
 class Repeatable(Base):
     def __init__(self, application):
         Base.__init__(self, application)
         self.repeat = LabelSlider('Repeat', start=0.0).insert_before(self.inout)
         self._parameters['repeat'] = self.repeat
+        self.last_repeat = 0
+        self.last_source_revision = None
 
     def compute(self):
+        repeat = int(self.repeat.value*100)
+        source_revision = self.input.source.revision
         self.update_shader()
         shader = self.shader
         input = self.input.source.texture
         output = self.texture
         tmp = self.application.temp
-        self.apply(shader, output, input)
+
+        if repeat > self.last_repeat and self.last_source_revision == source_revision:
+            delta = repeat - self.last_repeat
+            for i in range(delta):
+                self.apply(shader, tmp, output)
+                self.apply(shader, output, tmp)
+
+        else:
+            self.apply(shader, output, input)
+            start = time.time()
+            for i in range(repeat):
+                self.apply(shader, tmp, output)
+                self.apply(shader, output, tmp)
+            if repeat:
+                print 'seconds per step: %08.6f' % ((time.time() - start) / repeat)
         
-        for i in range(int(self.repeat.value*100.0)):
-            self.apply(shader, tmp, output)
-            self.apply(shader, output, tmp)
+        self.last_repeat = repeat
+        self.last_source_revision = source_revision
     
 class Gaussian(Repeatable):
     label = 'Gaussian' 
@@ -101,6 +120,8 @@ class Erode(Repeatable):
 
     def __init__(self, application):
         Repeatable.__init__(self, application) 
+        self.slope = LabelCheckbox('Slope', checked=True).insert_before(self.inout)
+        self._parameters['slope'] = self.slope
         self.shallow = LabelCheckbox('Shallow', checked=False).insert_before(self.inout)
         self._parameters['shallow'] = self.shallow
         self.invert = LabelCheckbox('Invert', checked=False).insert_before(self.inout)
@@ -112,6 +133,7 @@ class Erode(Repeatable):
         self.shader.vars.invert = self.invert.value
         self.shader.vars.shallow = self.shallow.value
         self.shader.vars.rough = self.rough.value
+        self.shader.vars.slope = self.slope.value
 
 class Wind(Repeatable):
     label = 'Wind'

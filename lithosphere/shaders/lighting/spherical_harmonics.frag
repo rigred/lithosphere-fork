@@ -139,7 +139,7 @@ uniform sampler2D normal_map;
 void main(){
     if(gl_FrontFacing){
         //const vec3 normal = normalize(frag_normal) * -1.0;
-        const vec3 normal = normalize(texture2D(normal_map, gl_TexCoord[0].st));
+        const vec3 normal = normalize(texture2D(normal_map, gl_TexCoord[0].st)) * -1.0;
         const float x = normal.x;
         const float y = normal.z; 
         const float z = normal.y; 

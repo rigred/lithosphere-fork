@@ -16,6 +16,7 @@ vec3 get_normal(vec3 p){
     float x = offsets.x;
     float z = offsets.y;
     // TODO maybe make this options, all models for normal calculation are interesting
+    /*
     return normalize((
         compute_normal(p, get(vec2(p.x+x, p.z+z))) + 
         compute_normal(p, get(vec2(p.x-x, p.z-z))) + 
@@ -26,19 +27,18 @@ vec3 get_normal(vec3 p){
         compute_normal(p, get(vec2(p.x+x, p.z))) + 
         compute_normal(p, get(vec2(p.x-x, p.z)))
     )/8.0);
-    /*
     return normalize((
-        compute_normal(p, get(p.x, p.z+z)) + 
-        compute_normal(p, get(p.x, p.z-z)) + 
-        compute_normal(p, get(p.x+x, p.z)) + 
-        compute_normal(p, get(p.x-x, p.z))
+        compute_normal(p, get(vec2(p.x, p.z+z))) + 
+        compute_normal(p, get(vec2(p.x, p.z-z))) + 
+        compute_normal(p, get(vec2(p.x+x, p.z))) + 
+        compute_normal(p, get(vec2(p.x-x, p.z)))
     )/4.0);
+    */
     return normalize(vec3(
         get(vec2(p.x-x, p.z)).y - get(vec2(p.x+x, p.z)).y,
         x+z,
         get(vec2(p.x, p.z-z)).y - get(vec2(p.x, p.z+z)).y
     ));
-    */
 }
 
 void main(void){
