@@ -1,3 +1,7 @@
+/*
+    :copyright: 2010 by Florian Boesch <pyalot@gmail.com>.
+    :license: GNU AGPL v3 or later, see LICENSE for more details.
+*/
 uniform float height, size, offset;
 
 const int p[256] = {151,160,137,91,90,15,

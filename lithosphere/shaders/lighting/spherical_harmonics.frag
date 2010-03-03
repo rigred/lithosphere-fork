@@ -1,3 +1,8 @@
+/*
+    :copyright: 2010 by Florian Boesch <pyalot@gmail.com>.
+    :license: GNU AGPL v3 or later, see LICENSE for more details.
+*/
+
 const float C1 = 0.429043;
 const float C2 = 0.511664;
 const float C3 = 0.743125;
@@ -138,11 +143,10 @@ uniform sampler2D normal_map;
 
 void main(){
     if(gl_FrontFacing){
-        //const vec3 normal = normalize(frag_normal) * -1.0;
-        const vec3 normal = normalize(texture2D(normal_map, gl_TexCoord[0].st)) * -1.0;
-        const float x = normal.x;
-        const float y = normal.z; 
-        const float z = normal.y; 
+        vec3 normal = normalize(texture2D(normal_map, gl_TexCoord[0].st).xyz) * -1.0;
+        float x = normal.x;
+        float y = normal.z; 
+        float z = normal.y; 
 
         vec3 diffuse    = C1 * L22 * (x * x - y * y) +
                           C3 * L20 * z * z +

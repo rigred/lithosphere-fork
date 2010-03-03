@@ -1,8 +1,12 @@
+/*
+    :copyright: 2010 by Florian Boesch <pyalot@gmail.com>.
+    :license: GNU AGPL v3 or later, see LICENSE for more details.
+*/
 uniform vec2 offsets;
 uniform sampler2D heightmap;
 
 vec3 get(vec2 uv){
-    float height = texture2D(heightmap, vec2(uv.s, uv.t));
+    float height = texture2D(heightmap, vec2(uv.s, uv.t)).r;
     return vec3(uv.s, height, uv.t);
 }
 

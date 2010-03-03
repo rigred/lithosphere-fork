@@ -15,7 +15,7 @@ from setuptools import setup
 setup(
     name                    = 'lithosphere',
     version                 = '0.1.0', 
-    description             = 'OpenGL GUI Toolkit',
+    description             = 'GPU terrain generator',
     long_description        = __doc__,
     license                 = 'GNU AFFERO GENERAL PUBLIC LICENSE (AGPL) Version 3',
     url                     = 'http://hg.codeflow.org/lithosphere',
@@ -41,4 +41,5 @@ setup(
     scripts                 = ['lithosphere/lithosphere'],
     install_requires        = ['setuptools', 'pyglet', 'halogen', 'gletools', 'UniversalDialogs'],
     platforms               = ['any'],
+    app                     = ['lithosphere/application.py'],
 )

@@ -4,6 +4,7 @@
     :copyright: 2010 by Florian Boesch <pyalot@gmail.com>.
     :license: GNU AGPL v3 or later, see LICENSE for more details.
 """
+from __future__ import with_statement
 
 from halogen import Area
 from gletools import Sampler2D

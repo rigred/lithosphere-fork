@@ -4,7 +4,8 @@
     :copyright: 2010 by Florian Boesch <pyalot@gmail.com>.
     :license: GNU AGPL v3 or later, see LICENSE for more details.
 """
-import json, os, sys, os
+from __future__ import with_statement
+import os, sys, os
 
 import pyglet
 import pyglet.gl
@@ -19,20 +20,15 @@ from .terrain import Terrain
 from .lines import LineCanvas
 from .viewport import View3d
 from .node_factory import NodeFactory
+from .json_api import dump, load
 
 class Application(object):
     def __init__(self):
         self.mesh_width = 512
         self.mesh_height = 512
 
-        #self.width = 512
-        #self.height = 512
-        #self.width = 1024
-        #self.height = 1024
-        self.width = 2048
-        self.height = 2048
-        #self.width = 4096
-        #self.height = 4096
+        self.width = 1024
+        self.height = 1024
         self.shaders = {}
 
         self.framebuffer = Framebuffer()
@@ -70,7 +66,7 @@ class Application(object):
             return
 
         with open(filename) as file:
-            data = json.load(file)
+            data = load(file)
 
         self.empty()
 
@@ -129,7 +125,7 @@ class Application(object):
         )
 
         with open(filename, 'w') as file:
-            json.dump(data, file, sort_keys=True, indent=4)
+            dump(data, file, sort_keys=True, indent=4)
 
     def run(self):
         pyglet.app.run()
@@ -143,7 +139,6 @@ class Application(object):
         self.viewport.draw_terrain()
         self.root.draw()
         glColor4f(1.0, 1.0, 1.0, 1.0)
-        #self.terrain.normal_texture.draw(200, 0)
 
     def create_texture(self):
         #return Texture(self.width, self.height, format=GL_LUMINANCE32F_ARB, clamp='st')
