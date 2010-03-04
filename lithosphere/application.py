@@ -32,7 +32,7 @@ class Application(object):
         self.shaders = {}
 
         self.framebuffer = Framebuffer()
-        self.window = pyglet.window.Window(fullscreen=True)
+        self.window = pyglet.window.Window(fullscreen=True, resizable=True)
         self.window.push_handlers(self)
         glClearColor(0.3, 0.3, 0.3, 1.0)
         
@@ -138,7 +138,6 @@ class Application(object):
         self.window.clear()
         self.viewport.draw_terrain()
         self.root.draw()
-        glColor4f(1.0, 1.0, 1.0, 1.0)
 
     def create_texture(self):
         #return Texture(self.width, self.height, format=GL_LUMINANCE32F_ARB, clamp='st')
