@@ -32,7 +32,7 @@ class Application(object):
         self.shaders = {}
 
         self.framebuffer = Framebuffer()
-        self.window = pyglet.window.Window(fullscreen=True, vsync=False)
+        self.window = pyglet.window.Window(fullscreen=False)
         self.window.push_handlers(self)
         glClearColor(0.3, 0.3, 0.3, 1.0)
         

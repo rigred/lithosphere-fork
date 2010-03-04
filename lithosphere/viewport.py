@@ -26,11 +26,10 @@ class View3d(Node):
         Node.__init__(self)
         self.application = application
 
-        self.spherical_harmonics = self.load_lighting(
+        self.light = self.load_lighting(
             'spherical_harmonics.frag',
             normal_map = Sampler2D(GL_TEXTURE0),
         )
-        self.light = self.spherical_harmonics
         
         self.speed = Vector(0, 0, 0)
         self.angular_speed = Vector(0, 0, 0)
@@ -91,6 +90,7 @@ class View3d(Node):
     def draw_terrain(self):
         rect = self.rect
         with nested(
+            self.light,
             Projection(rect.left, rect.bottom, rect.width, rect.height, fov=40, near=0.001, far=4.0), 
             DepthTest,
         ):
@@ -102,9 +102,7 @@ class View3d(Node):
                 self.up.x, self.up.y, self.up.z,
             )
             glColor4f(0.6, 0.6, 0.6, 1.0)
-            with self.light:
-                self.application.terrain.draw()
-            #self.draw_unit_cube() #makes problems (flickers)
+            self.application.terrain.draw()
             glPopMatrix()
 
     def draw_unit_cube(self):

@@ -20,14 +20,10 @@ class Terrain(object):
         self.widget = Widget('Terrain', self.input, id='terrain').append_to(application.workspace)
         
         self.vertex_texture = Texture(width, height, GL_RGBA32F)
-        self.normal_texture = Texture(application.width, application.height, GL_RGBA32F)
+        self.normal_texture = Texture(application.width, application.height, GL_RGBA32F, unit=GL_TEXTURE0)
 
-        self.vertex_fbo = Framebuffer(
-            self.vertex_texture,
-        )
-        self.normal_fbo = Framebuffer(
-            self.normal_texture,
-        )
+        self.vertex_fbo = Framebuffer(self.vertex_texture)
+        self.normal_fbo = Framebuffer(self.normal_texture)
 
         self.update_vertex_shader = application.shader('update_vertex.frag')
         self.update_normals_shader = application.shader('update_normals.frag')
