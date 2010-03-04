@@ -125,22 +125,6 @@ Output{
     right: 0px;
 }
 
-#toolbar{
-    bottom: 10px;
-    left: 10px;
-    background: file(images/toolbar.png) patch;
-    padding: 15px 15px 15px 15px;
-    spacing: 7px;
-}
-
-#toolbar Button{
-    width: 80px;
-}
-
-#toolbar > Column{
-    top: 0px;
-}
-
 Area.inout{
     width: 180px;
     height: 13px;
@@ -186,3 +170,37 @@ Checkbox{
 Checkbox:on{
     background: file(images/checkbox_on.png) image;
 }
+
+Tabs{
+    background: file(images/tab_body.png) patch;
+    padding: 0px 12px 12px 12px;
+    width: 210px;
+    height: 200px;
+}
+
+Tabs > Row > Button{
+    background: file(images/tab.png) patch;
+    height: 18px;
+}
+
+Tabs > Row > Button > Label{
+    font: name(Bitstream Vera Sans) 10pt rgb(0.5 0.5 0.5) bold;
+}
+
+Tabs > Row > Button:active > Label{
+    font: name(Bitstream Vera Sans) 10pt rgb(0.95 0.95 0.95) bold;
+}
+
+Tabs > Content{
+    padding: 10px 0px 0px 0px;
+}
+
+#toolbar{
+    bottom: 10px;
+    left: 10px;
+}
+
+#toolbar Content Button{
+    width: 80px;
+}
+

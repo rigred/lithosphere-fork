@@ -177,4 +177,4 @@ class Step(Base):
         self.shader.vars.low = self.bottom.value-0.25
         self.shader.vars.high = self.bottom.value + self.height.value
     
-nodes = Gaussian, Erode, Incline, Step, Wind
+nodes = [Gaussian, Erode, Incline, Step, Wind]

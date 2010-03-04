@@ -16,8 +16,16 @@ class NodeFactory(object):
             (node_type.__name__, node_type)
             for node_type in self.nodes
         )
-        for node_type in self.nodes:
-            application.toolbar.add(node_type)
+
+        toolbar = application.toolbar
+        for type in noise.nodes:
+            toolbar.sources.add(type)
+
+        for type in binops.nodes + mix.nodes:
+            toolbar.operators.add(type)
+
+        for type in filters.nodes + adjust.nodes:
+            toolbar.filters.add(type)
        
     @property
     def nodes(self):
