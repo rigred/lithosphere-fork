@@ -4,5 +4,6 @@ syntax: glob
 *.vim
 *.so
 *.orig
+*.app
 .DS_Store
 build

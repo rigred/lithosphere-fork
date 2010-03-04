@@ -41,5 +41,5 @@ setup(
     scripts                 = ['lithosphere/lithosphere'],
     install_requires        = ['setuptools', 'pyglet', 'halogen', 'gletools', 'UniversalDialogs'],
     platforms               = ['any'],
-    app                     = ['lithosphere/application.py'],
+    app                     = ['lithosphere/app.py'],
 )

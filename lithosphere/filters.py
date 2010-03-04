@@ -100,12 +100,9 @@ class Repeatable(Base):
 
         else:
             self.apply(shader, output, input)
-            start = time.time()
             for i in range(repeat):
                 self.apply(shader, tmp, output)
                 self.apply(shader, output, tmp)
-            if repeat:
-                print 'seconds per step: %08.6f' % ((time.time() - start) / repeat)
         
         self.last_repeat = repeat
         self.last_source_revision = source_revision

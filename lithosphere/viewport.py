@@ -90,7 +90,7 @@ class View3d(Node):
     def draw_terrain(self):
         rect = self.rect
         with nested(
-            self.light,
+            self.light, #this makes the app coredump on my macosx
             Projection(rect.left, rect.bottom, rect.width, rect.height, fov=40, near=0.001, far=4.0), 
             DepthTest,
         ):

@@ -32,14 +32,14 @@ class Application(object):
         self.shaders = {}
 
         self.framebuffer = Framebuffer()
-        self.window = pyglet.window.Window(fullscreen=False)
+        self.window = pyglet.window.Window(fullscreen=True)
         self.window.push_handlers(self)
         glClearColor(0.3, 0.3, 0.3, 1.0)
         
         self.dialogs = Dialogs()
         self.dialogs.on_open = self.on_open
         self.dialogs.on_save = self.on_save
-        
+      
         self.root = Root(self.window, here('style/style.hss'))
         self.work_area = Area(id='sidebar').append_to(self.root)
         self.workspace = Workspace().append_to(self.work_area)
