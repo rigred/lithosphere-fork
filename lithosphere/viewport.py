@@ -6,7 +6,7 @@
 """
 from __future__ import with_statement
 
-from halogen import Node, here
+from halogen import Node, here, Area
 from gletools import Projection, ShaderProgram, VertexShader, FragmentShader, DepthTest, Sampler2D
 from pyglet.gl import *
 from pyglet.window.key import S, D, F, E, W, R, LSHIFT
@@ -21,9 +21,9 @@ def hex2color(hex):
         int(hex[4:], 16)/255.0,
     )
 
-class View3d(Node):
+class View3d(Area):
     def __init__(self, application):
-        Node.__init__(self)
+        Area.__init__(self)
         self.application = application
 
         self.light = self.load_lighting(

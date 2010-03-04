@@ -10,7 +10,7 @@ from halogen import Column, Row, Button, Node
 class Toolbar(object):
     def __init__(self, application):
         self.application = application
-        self.row = Row(id='toolbar').append_to(application.work_area)
+        self.row = Row(id='toolbar').append_to(application.viewport)
         self.col1 = Column().append_to(self.row)
         self.col2 = Column().append_to(self.row)
         

@@ -126,7 +126,7 @@ Output{
 }
 
 #toolbar{
-    top: 10px;
+    bottom: 10px;
     left: 10px;
     background: file(images/toolbar.png) patch;
     padding: 15px 15px 15px 15px;
