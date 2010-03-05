@@ -34,10 +34,8 @@ float noise(vec2 value){
     vec2 xy1 = xy0 - vec2(i1, j1) + G2;
     vec2 xy2 = xy0 - 1.0 + 2.0 * G2;
    
-    int ii = int(clamp(float(i), 0.0, 255.0));
-    int jj = int(clamp(float(j), 0.0, 255.0));
-    //int ii = i & 255;
-    //int jj = j & 255;
+    int ii = i&255; // weirdly replacing this with modulo of 256 does not work...
+    int jj = j&255;
 
     int gi0 = modulo(perm(ii+perm(jj)), 12);
     int gi1 = modulo(perm(ii+i1+perm(jj+j1)), 12);
