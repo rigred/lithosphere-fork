@@ -1,0 +1,9 @@
+syntax: glob
+*.pyc
+*.egg-info
+*.vim
+*.so
+*.orig
+*.app
+.DS_Store
+build

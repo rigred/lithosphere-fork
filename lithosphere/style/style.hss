@@ -1,0 +1,206 @@
+Root{
+    font: name(Bitstream Vera Sans) 10pt rgb(0.95 0.95 0.95) bold;
+    color: rgb(1.0 1.0 1.0 1.0);
+}
+
+Row, Column{
+    align: center middle;
+    spacing: 10px;
+}
+
+Button{
+    background: file(images/button.png) patch;
+    padding: 5px 5px 5px 5px;
+}
+
+Button:hover{
+    background: file(images/button_hover.png) patch;
+}
+
+Button:pressed{
+    background: file(images/button_pressed.png) patch;
+}
+
+Button > Label{
+    font: name(Bitstream Vera Sans) 10pt rgb(0.0 0.0 0.0) bold;
+    align: center middle;
+}
+
+Slider{
+    width: 100px;
+    height: 8px;
+    background: file(images/slider_background.png) patch;
+}
+
+Slider:focus{
+    background: file(images/slider_background_focus.png) patch;
+}
+
+Slider > Handle{
+    width: 12px;
+    height: 8px;
+    left: 30px;
+    background: file(images/slider_handle.png) patch;
+}
+
+Slider > Handle:hover{
+    background: file(images/slider_handle_hover.png) patch;
+}
+
+Widget{
+    background: file(images/widget.png) patch;
+}
+
+Widget.node{
+    left: 250px;
+    align: middle;
+}
+
+Widget > Bar{
+    width: 100%;
+    height: 21px;
+    padding: 5px 0px 0px 0px;
+}
+
+Widget > Content{
+    padding: 7px 10px 13px 10px;
+}
+
+Widget > Bar Label{
+    align: center middle;
+}
+
+Widget > Bar > Area{
+    height: 16px;
+    width: 100%;
+}
+
+Widget > Bar Button{
+    width: 16px;
+    height: 16px;
+    background: file(images/delete.png) image;
+    right: 10px;
+}
+
+Widget > Bar Button:hover{
+    background: file(images/delete_hover.png) image;
+}
+
+Widget > Content Label{
+    width: 70px;
+}
+
+Connector{
+    width: 12px;
+    height: 12px;
+    background: file(images/dropable.png) image;
+}
+
+Connector:hover{
+    background: file(images/dropable_hover.png) image;
+}
+
+Output, Input{
+    width: 13px;
+    height: 13px;
+    background: file(images/slot.png) image;
+}
+
+Output:near, Input:near{
+    background: file(images/slot_near.png) image;
+}
+
+Input{
+    left: 0px;
+}
+
+Output{
+    right: 0px;
+}
+
+#sidebar{
+    background: file(images/sidebar.png) patch;
+    width: 100%;
+    height: 40%;
+    right: 0px;
+}
+
+Area.inout{
+    width: 180px;
+    height: 13px;
+}
+
+#canvas{
+    width: 100%;
+    height: 100%;
+}
+
+#terrain{
+    width: 150px;
+    align: middle;
+    right: 50px;
+}
+
+View3d{
+    width: 100%;
+    height: 60%;
+    top: 0px;
+}
+
+View3d:focus{
+    background: file(images/viewport_focus.png) patch;
+}
+
+Workspace{
+    width: 100%;
+    height: 100%;
+}
+
+Node.seperator{
+    width: 100%;
+    height: 16px;
+}
+
+Checkbox{
+    background: file(images/checkbox_off.png) image;
+    width: 27px;
+    height: 13px;
+}
+
+Checkbox:on{
+    background: file(images/checkbox_on.png) image;
+}
+
+Tabs{
+    background: file(images/tab_body.png) patch;
+    padding: 0px 12px 12px 12px;
+    width: 210px;
+    height: 200px;
+}
+
+Tabs > Row > Button{
+    background: file(images/tab.png) patch;
+    height: 18px;
+}
+
+Tabs > Row > Button > Label{
+    font: name(Bitstream Vera Sans) 10pt rgb(0.5 0.5 0.5) bold;
+}
+
+Tabs > Row > Button:active > Label{
+    font: name(Bitstream Vera Sans) 10pt rgb(0.95 0.95 0.95) bold;
+}
+
+Tabs > Content{
+    padding: 10px 0px 0px 0px;
+}
+
+#toolbar{
+    bottom: 10px;
+    left: 10px;
+}
+
+#toolbar Content Button{
+    width: 80px;
+}
+
