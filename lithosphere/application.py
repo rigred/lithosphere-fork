@@ -143,7 +143,7 @@ class Application(object):
         #return Texture(self.width, self.height, format=GL_LUMINANCE32F_ARB, clamp='st')
         return Texture(self.width, self.height, format=GL_RGBA32F, clamp='st')
 
-    def shader(self, *names):
+    def shader(self, *names, **kwargs):
         if names in self.shaders:
             return self.shaders[names]
         else:
@@ -152,7 +152,7 @@ class Application(object):
                 if name.endswith('.frag') else
                 VertexShader.open(here('shaders/%s' % name))
                 for name in names
-            ])
+            ], **kwargs)
             self.shaders[names] = shader
             return shader
 
