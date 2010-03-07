@@ -204,3 +204,6 @@ Tabs > Content{
     width: 80px;
 }
 
+LabelInput{
+    spacing: 57px;
+}

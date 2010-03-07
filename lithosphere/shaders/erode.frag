@@ -3,6 +3,7 @@
     :license: GNU AGPL v3 or later, see LICENSE for more details.
 */
 uniform sampler2D texture;
+uniform sampler2D filter_weight;
 uniform vec2 offsets;
 const float pih = 1.0/(3.14159265358979323846264*0.5);
 uniform bool invert, shallow, rough, slope;
@@ -17,6 +18,7 @@ void main(){
     float s = offsets.x;
     float t = offsets.y;
 
+    float weight = texture2D(filter_weight, uv).r;
     vec3 pos = get(uv);
     vec3 left = get(uv+vec2(-s, 0.0));
     vec3 right = get(uv+vec2(s, 0.0));
@@ -76,6 +78,8 @@ void main(){
     else{
         result = sum/count;
     }
+
+    result = mix(result, pos.y, clamp(weight, 0.0, 1.0));
 
     gl_FragColor = vec4(result);
 }

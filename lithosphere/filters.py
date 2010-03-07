@@ -9,7 +9,7 @@ from halogen import Widget, Column, Area
 from gletools import Sampler2D
 from pyglet.gl import *
 
-from .util import Output, Input, quad, LabelSlider, LabelCheckbox, connect
+from .util import Output, Input, quad, LabelSlider, LabelCheckbox, connect, LabelInput
 from .node import Node
 
 class Base(Node):
@@ -28,9 +28,9 @@ class Base(Node):
     
     @property
     def revision(self):
-        source_revision = self.input.source.revision if self.input.source else None
+        sources = tuple([input.source.revision if input.source else None for input in self.sources.values()])
         parameters = tuple((name, param.value) for name, param in self._parameters.items())
-        return hash((self.__class__.__name__, source_revision, parameters))
+        return hash((self.__class__.__name__, parameters, sources))
     
     def get_parameters(self):
         return dict((name, param.value) for name, param in self._parameters.items())
@@ -73,15 +73,40 @@ class Base(Node):
         output = self.texture
         self.apply(shader, output, input)
 
-import time
-
 class Repeatable(Base):
     def __init__(self, application):
         Base.__init__(self, application)
         self.repeat = LabelSlider('Repeat', start=0.0).insert_before(self.inout)
+        self.weight = LabelInput('Weight', self).insert_before(self.inout)
         self._parameters['repeat'] = self.repeat
         self.last_repeat = 0
         self.last_source_revision = None
+        self.shader.vars.texture = Sampler2D(GL_TEXTURE0)
+        self.shader.vars.filter_weight = Sampler2D(GL_TEXTURE1)
+    
+    def update(self):
+        if self.input.source:
+            self.input.source.update()
+            if self.weight.input.source:
+                self.weight.input.source.update()
+
+            revision = self.revision
+
+            if revision != self.updated:
+                self.compute()
+                self.updated = revision
+                return True
+    
+    def reconnect(self, data, instances):
+        input_id = data['input']
+        if input_id:
+            node = instances[input_id]
+            connect(node, self.input)
+
+        weight_id = data.get('weight')
+        if weight_id:
+            node = instances[weight_id]
+            connect(node, self.weight.input)
 
     def compute(self):
         repeat = int(self.repeat.value*100)
@@ -90,22 +115,34 @@ class Repeatable(Base):
         shader = self.shader
         input = self.input.source.texture
         output = self.texture
+        if self.weight.input.source:
+            weight = (self.weight.input.source.texture,)
+        else:
+            weight = ()
+
         tmp = self.application.temp
 
         if repeat > self.last_repeat and self.last_source_revision == source_revision:
             delta = repeat - self.last_repeat
             for i in range(delta):
-                self.apply(shader, tmp, output)
-                self.apply(shader, output, tmp)
+                self.apply(shader, tmp, output, *weight)
+                self.apply(shader, output, tmp, *weight)
 
         else:
-            self.apply(shader, output, input)
+            self.apply(shader, output, input, *weight)
             for i in range(repeat):
-                self.apply(shader, tmp, output)
-                self.apply(shader, output, tmp)
+                self.apply(shader, tmp, output, *weight)
+                self.apply(shader, output, tmp, *weight)
         
         self.last_repeat = repeat
         self.last_source_revision = source_revision
+    
+    @property
+    def sources(self):
+        return dict(
+            weight = self.weight.input,
+            input = self.input,
+        )
     
 class Gaussian(Repeatable):
     label = 'Gaussian' 
@@ -118,12 +155,13 @@ class Erode(Repeatable):
     def __init__(self, application):
         Repeatable.__init__(self, application) 
         self.slope = LabelCheckbox('Slope', checked=True).insert_before(self.inout)
-        self._parameters['slope'] = self.slope
         self.shallow = LabelCheckbox('Shallow', checked=False).insert_before(self.inout)
-        self._parameters['shallow'] = self.shallow
         self.invert = LabelCheckbox('Invert', checked=False).insert_before(self.inout)
-        self._parameters['invert'] = self.invert
         self.rough = LabelCheckbox('Rough', checked=False).insert_before(self.inout)
+        
+        self._parameters['slope'] = self.slope
+        self._parameters['shallow'] = self.shallow
+        self._parameters['invert'] = self.invert
         self._parameters['rough'] = self.rough
     
     def update_shader(self):

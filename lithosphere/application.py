@@ -34,7 +34,6 @@ class Application(object):
         self.framebuffer = Framebuffer()
         self.window = pyglet.window.Window(fullscreen=True, resizable=True)
         self.window.push_handlers(self)
-        glClearColor(0.3, 0.3, 0.3, 1.0)
         
         self.dialogs = Dialogs()
         self.dialogs.on_open = self.on_open
@@ -135,6 +134,7 @@ class Application(object):
             node.delete()
     
     def on_draw(self):
+        glClearColor(0.3, 0.3, 0.3, 1.0)
         self.window.clear()
         self.viewport.draw_terrain()
         self.root.draw()

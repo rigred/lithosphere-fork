@@ -52,6 +52,12 @@ class Input(Slot):
         self.source = connector.output.node
         connector.input = self
 
+class LabelInput(Row):
+    def __init__(self, title, node):
+        Row.__init__(self)
+        self.input = Input(node).append_to(self)
+        Label(title).append_to(self)
+
 class Connector(Dropable):
     target = Input
     def __init__(self, output):
