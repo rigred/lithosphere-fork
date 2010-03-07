@@ -87,12 +87,15 @@ class Terrain(object):
         revision = self.revision
         if self.input.source:
             self.input.source.update()
+            source = self.input.source.texture
+            
             if revision != self.updated:
-                with nested(view, self.vertex_fbo, self.input.source.texture, self.update_vertex_shader):
+                self.vertex_fbo.textures[0] = self.vertex_texture
+                with nested(view, self.vertex_fbo, source, self.update_vertex_shader):
                     quad(self.width, self.height)
                     self.vbo.vertices.copy_from(self.vertex_texture)
 
-                with nested(view, self.normal_fbo, self.input.source.texture, self.update_normals_shader):
+                with nested(view, self.normal_fbo, source, self.update_normals_shader):
                     quad(self.application.width, self.application.height)
         else:
             if revision != self.updated:

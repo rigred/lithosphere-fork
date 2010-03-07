@@ -3,10 +3,6 @@ Root{
     color: rgb(1.0 1.0 1.0 1.0);
 }
 
-Label{
-    // height: 10px;
-}
-
 Row, Column{
     align: center middle;
     spacing: 10px;
@@ -15,7 +11,7 @@ Row, Column{
 Button{
     background: file(images/button.png) patch;
     padding: 5px 5px 5px 5px;
-    // height: 22px;
+    height: 24px;
 }
 
 Button:hover{
@@ -93,6 +89,7 @@ Widget > Bar Button:hover{
 
 Widget > Content Label{
     width: 70px;
+    height: 10px;
 }
 
 Connector{
@@ -179,8 +176,12 @@ Checkbox:on{
 Tabs{
     background: file(images/tab_body.png) patch;
     padding: 0px 12px 12px 12px;
-    width: 210px;
-    height: 200px;
+    width: 220px;
+    height: 210px;
+}
+
+Tabs > Row{
+    spacing: 5px;
 }
 
 Tabs > Row > Button{
@@ -207,6 +208,10 @@ Tabs > Content{
 
 #toolbar Content Button{
     width: 80px;
+}
+
+#toolbar Column{
+    spacing: 5px;
 }
 
 LabelInput{
