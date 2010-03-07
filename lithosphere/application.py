@@ -38,7 +38,11 @@ class Application(object):
         self.dialogs = Dialogs()
         self.dialogs.on_open = self.on_open
         self.dialogs.on_save = self.on_save
-      
+
+        font_dir = here('style/fonts')
+        for name in os.listdir(here('style/fonts')):
+            pyglet.font.add_file(os.path.join(font_dir, name))
+        
         self.root = Root(self.window, here('style/style.hss'))
         self.work_area = Area(id='sidebar').append_to(self.root)
         self.workspace = Workspace().append_to(self.work_area)

@@ -3,6 +3,10 @@ Root{
     color: rgb(1.0 1.0 1.0 1.0);
 }
 
+Label{
+    height: 10px;
+}
+
 Row, Column{
     align: center middle;
     spacing: 10px;
@@ -11,6 +15,7 @@ Row, Column{
 Button{
     background: file(images/button.png) patch;
     padding: 5px 5px 5px 5px;
+    height: 22px;
 }
 
 Button:hover{
@@ -23,7 +28,7 @@ Button:pressed{
 
 Button > Label{
     font: name(Bitstream Vera Sans) 10pt rgb(0.0 0.0 0.0) bold;
-    align: center middle;
+    align: center baseline;
 }
 
 Slider{
@@ -67,7 +72,7 @@ Widget > Content{
 }
 
 Widget > Bar Label{
-    align: center middle;
+    align: center baseline;
 }
 
 Widget > Bar > Area{
