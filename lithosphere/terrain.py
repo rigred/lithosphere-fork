@@ -6,8 +6,8 @@
 """
 from __future__ import with_statement
 
-from halogen import Widget
-from .util import Input, nested, quad, connect
+from halogen import Widget, Column
+from .util import LabelInput, nested, quad, connect
 from gletools import Texture, Framebuffer, VertexObject
 from pyglet.gl import *
 from ctypes import c_float, c_uint
@@ -15,10 +15,15 @@ from ctypes import c_float, c_uint
 class Terrain(object):
     def __init__(self, application):
         self.application = application
-        self.input = Input(self)
         self.width, self.height = width, height = application.mesh_width, application.mesh_height
-        self.widget = Widget('Terrain', self.input, id='terrain').append_to(application.workspace)
+       
+        col = Column() 
+        self.input_height = LabelInput('Height', self).append_to(col).input
+        self.material = LabelInput('Material', self).append_to(col).input
         
+        self.widget = Widget('Terrain', col, id='terrain').append_to(application.workspace)
+
+        self.default_material = Texture(2, 2, GL_RGBA, data=(140, 140, 140, 255)*4)
         self.vertex_texture = Texture(width, height, GL_RGBA32F)
         self.normal_texture = Texture(application.width, application.height, GL_RGBA32F, unit=GL_TEXTURE0)
 
@@ -34,7 +39,7 @@ class Terrain(object):
         self.vbo = self.generate_vbo(width, height)
 
         self.reset()
-        self.updated = True
+        self.updated = None
 
     def generate_vbo(self, width, height):
         #as an acceleration the arrays could be prefilled in C
@@ -72,10 +77,11 @@ class Terrain(object):
         input_id = data['source']
         if input_id:
             node = instances[input_id]
-            connect(node, self.input)
+            connect(node, self.input_height)
 
     def reset(self):
         view = self.application.processing_view
+        self.vertex_fbo.textures[0] = self.vertex_texture
         with nested(view, self.vertex_fbo, self.reset_vertex):
             quad(self.width, self.height)
             self.vbo.vertices.copy_from(self.vertex_texture)
@@ -85,11 +91,15 @@ class Terrain(object):
     def update(self):
         view = self.application.processing_view
         revision = self.revision
-        if self.input.source:
-            self.input.source.update()
-            source = self.input.source.texture
-            
-            if revision != self.updated:
+        if revision != self.updated:
+            if self.material.source:
+                self.material.source.update()
+
+            if self.input_height.source:
+                self.input_height.source.update()
+                source = self.input_height.source.texture
+                source.unit = GL_TEXTURE0
+                
                 self.vertex_fbo.textures[0] = self.vertex_texture
                 with nested(view, self.vertex_fbo, source, self.update_vertex_shader):
                     quad(self.width, self.height)
@@ -97,22 +107,36 @@ class Terrain(object):
 
                 with nested(view, self.normal_fbo, source, self.update_normals_shader):
                     quad(self.application.width, self.application.height)
-        else:
-            if revision != self.updated:
+            else:
                 self.reset()
 
         self.updated = revision
 
     @property
     def revision(self):
-        if self.input.source:
-            return self.input.source.revision
+        if self.input_height.source:
+            height = self.input_height.source.revision
         else:
-            return None
+            height = None
+
+        if self.material.source:
+            material = self.material.source.revision
+        else:
+            material = None
+
+        return hash((height, material))
     
     def draw(self):
         glPushMatrix()
         glTranslatef(-0.5, 0, -0.5)
-        with self.normal_texture:
-            self.vbo.draw(GL_TRIANGLES)
+        self.normal_texture.unit = GL_TEXTURE0
+
+        if self.material.source:
+            self.material.source.texture.unit = GL_TEXTURE1
+            with nested(self.normal_texture, self.material.source.texture):
+                self.vbo.draw(GL_TRIANGLES)
+        else:
+            self.default_material.unit = GL_TEXTURE1
+            with nested(self.normal_texture, self.default_material):
+                self.vbo.draw(GL_TRIANGLES)
         glPopMatrix()

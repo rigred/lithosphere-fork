@@ -5,9 +5,9 @@
     :license: GNU AGPL v3 or later, see LICENSE for more details.
 """
 
-import noise, binops, filters, mix, adjust
+import noise, binops, filters, mix, adjust, color_source
 
-modules = noise, binops, filters, mix, adjust
+modules = noise, binops, filters, mix, adjust, color_source
 
 class NodeFactory(object):
     def __init__(self, application):
@@ -18,7 +18,7 @@ class NodeFactory(object):
         )
 
         toolbar = application.toolbar
-        for type in noise.nodes:
+        for type in noise.nodes + color_source.nodes:
             toolbar.sources.add(type)
 
         for type in binops.nodes + mix.nodes:

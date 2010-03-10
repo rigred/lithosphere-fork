@@ -104,4 +104,8 @@ class Min(Binop):
     label = 'Min'
     shader = 'min.frag'
 
-nodes = [Add, Subtract, Multiply, Power, Min, Max]
+class Equal(Binop):
+    label = 'Equal'
+    shader = 'equal.frag'
+
+nodes = [Add, Subtract, Multiply, Power, Min, Max, Equal]

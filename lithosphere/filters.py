@@ -190,15 +190,21 @@ class Wind(Repeatable):
 
 class Incline(Base):
     label = 'Incline'
-    shader = 'steep.frag'
+    shader = 'incline.frag'
 
     def __init__(self, application):
         Base.__init__(self, application)
         self.invert = LabelCheckbox('Invert').insert_before(self.inout)
+        self.factor = LabelSlider('Factor', start=0.5).insert_before(self.inout)
+        self.offset = LabelSlider('Offset', start=0.5).insert_before(self.inout)
         self._parameters['invert'] = self.invert
+        self._parameters['factor'] = self.factor
+        self._parameters['offset'] = self.offset
 
     def update_shader(self):
         self.shader.vars.invert = self.invert.value
+        self.shader.vars.factor = (self.factor.value * 2) ** 10
+        self.shader.vars.offset = (self.offset.value-0.5) * 10
 
 class Step(Base):
     label = 'Step'
@@ -214,5 +220,5 @@ class Step(Base):
     def update_shader(self):
         self.shader.vars.low = self.bottom.value-0.25
         self.shader.vars.high = self.bottom.value + self.height.value
-    
+
 nodes = [Gaussian, Erode, Incline, Step, Wind]

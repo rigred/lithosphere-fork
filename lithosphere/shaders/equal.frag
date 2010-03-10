@@ -4,9 +4,8 @@
 */
 uniform sampler2D op1;
 uniform sampler2D op2;
-uniform sampler2D alpha;
 
 void main(void){
     vec2 pos = gl_TexCoord[0].st; 
-    gl_FragColor = mix(texture2D(op1, pos), texture2D(op2, pos), clamp(texture2D(alpha, pos), 0.0, 1.0));
+    gl_FragColor = vec4(texture2D(op1, pos) == texture2D(op2, pos));
 }

@@ -3,6 +3,8 @@
     :license: GNU AGPL v3 or later, see LICENSE for more details.
 */
 uniform vec2 offsets;
+uniform float offset;
+uniform float factor;
 uniform sampler2D heightmap;
 uniform bool invert;
 const float pih = 3.14159265358979323846264*0.5;
@@ -27,6 +29,7 @@ void main(void){
     vec3 pos = get(uv.s, uv.t);
     vec3 normal = get_normal(pos);
     float result = dot(normal, vec3(0.0, 1.0, 0.0));
+    result = result * factor + offset;
     if(invert){
         gl_FragColor = vec4(1.0-result);
     }

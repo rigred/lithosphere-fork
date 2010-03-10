@@ -140,10 +140,14 @@ const vec3 L22  = vec3(-0.2858534, -0.3235718, -0.3586478);
 #endif
 
 uniform sampler2D normal_map;
+uniform sampler2D material;
 
 void main(){
     if(gl_FrontFacing){
-        vec3 normal = normalize(texture2D(normal_map, gl_TexCoord[0].st).xyz) * -1.0;
+        vec2 uv = gl_TexCoord[0].st;
+        vec3 normal = normalize(texture2D(normal_map, uv).xyz) * -1.0;
+        vec3 color = texture2D(material, uv).rgb;
+
         float x = normal.x;
         float y = normal.z; 
         float z = normal.y; 
@@ -159,7 +163,7 @@ void main(){
                           2.0 * C2 * L1m1 * y +
                           2.0 * C2 * L10  * z;
 
-        diffuse *= gl_Color.rgb;
+        diffuse *= color;
         
         gl_FragColor = vec4(diffuse, gl_Color.w);
         //gl_FragColor = vec4(normal.xyz, 1.0);

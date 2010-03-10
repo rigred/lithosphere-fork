@@ -23,7 +23,7 @@ class Adjust(Node):
         self.shader = application.shader('adjust.frag')
         self.shader.vars.texture = Sampler2D(GL_TEXTURE0)
         
-        self.factor = LabelSlider('Factor', start=0.1).insert_before(self.inout)
+        self.factor = LabelSlider('Factor', start=0.5).insert_before(self.inout)
         self.offset = LabelSlider('Offset', start=0.5).insert_before(self.inout)
 
         self.updated = False
@@ -77,7 +77,7 @@ class Adjust(Node):
                 output.unit = GL_TEXTURE0
                 shader = self.shader
 
-                shader.vars.factor = self.factor.value * 10
+                shader.vars.factor = (self.factor.value * 2) ** 10
                 shader.vars.offset = (self.offset.value-0.5) * 10
 
                 fbo = self.application.framebuffer

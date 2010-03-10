@@ -7,5 +7,5 @@ Non blocking Issues with configurations:
     linux, ubuntu 9.10, nvidia gf285 gtx, driver 185.18.36
     linux, ubuntu 9.10, nvidia gf8800 gts, driver 185.18.36
 
-Known broken configurations:
-linux, nvidia gf9800 GTX+, driver 173.14.20 --> segfault on simplex.frag
+Known not working configurations:
+    Intel Corporation Mobile GM965/GL960 Integrated Graphics Controller (rev 0c) (no support for GL_RGBA32F)

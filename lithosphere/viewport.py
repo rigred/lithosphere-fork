@@ -29,6 +29,7 @@ class View3d(Area):
         self.light = self.load_lighting(
             'spherical_harmonics.frag',
             normal_map = Sampler2D(GL_TEXTURE0),
+            material = Sampler2D(GL_TEXTURE1),
         )
         
         self.speed = Vector(0, 0, 0)
@@ -101,7 +102,6 @@ class View3d(Area):
                 self.pos.x + self.at.x, self.pos.y + self.at.y, self.pos.z + self.at.z,
                 self.up.x, self.up.y, self.up.z,
             )
-            glColor4f(0.6, 0.6, 0.6, 1.0)
             self.application.terrain.draw()
             glPopMatrix()
 
