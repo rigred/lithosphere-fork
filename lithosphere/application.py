@@ -11,10 +11,9 @@ import pyglet
 import pyglet.gl
 from pyglet.gl import *
 
-from halogen import Root, Area, Workspace, here, Button
+from halogen import Root, Area, Workspace, here, Button, FileOpen
 from gletools import Texture, Framebuffer, ShaderProgram, FragmentShader, Viewport, Screen
 
-from .dialogs import Dialogs
 from .toolbar import Toolbar
 from .terrain import Terrain
 from .lines import LineCanvas
@@ -35,15 +34,15 @@ class Application(object):
         self.window = pyglet.window.Window(fullscreen=True, resizable=True)
         self.window.push_handlers(self)
         
-        self.dialogs = Dialogs()
-        self.dialogs.on_open = self.on_open
-        self.dialogs.on_save = self.on_save
-
         font_dir = here('style/fonts')
         for name in os.listdir(here('style/fonts')):
             pyglet.font.add_file(os.path.join(font_dir, name))
         
         self.root = Root(self.window, here('style/style.hss'))
+
+        self.file_open = FileOpen(self.root)
+        self.file_open.on_file = self.open
+
         self.work_area = Area(id='sidebar').append_to(self.root)
         self.workspace = Workspace().append_to(self.work_area)
         self.canvas = LineCanvas().append_to(self.workspace)
@@ -64,10 +63,7 @@ class Application(object):
     def remove_node(self, node):
         self.nodes.remove(node)
 
-    def on_open(self, filename):
-        if os.path.isdir(filename):
-            return
-
+    def open(self, filename):
         with open(filename) as file:
             data = load(file)
 
@@ -168,5 +164,5 @@ def main():
     if len(sys.argv) > 1:
         path = sys.argv[1]
         if os.path.exists(path):
-            application.on_open(path)
+            application.open(path)
     application.run()

@@ -30,8 +30,8 @@ class Toolbar(object):
         self.tabs = Tabs(id='toolbar').append_to(application.viewport)
 
         file_col = Column()
-        Button('Open').append_to(file_col).on_click = application.dialogs.open
-        Button('Save').append_to(file_col).on_click = application.dialogs.save
+        Button('Open').append_to(file_col).on_click = application.file_open.show
+        #Button('Save').append_to(file_col).on_click = application.dialogs.save
         Button('New').append_to(file_col).on_click = application.empty
 
         self.tabs.add('File', file_col)

@@ -87,7 +87,7 @@ Widget > Bar Button:hover{
     background: file(images/delete_hover.png) image;
 }
 
-Widget > Content Label{
+Widget.node > Content Label{
     width: 70px;
     height: 10px;
 }
@@ -216,4 +216,36 @@ Tabs > Content{
 
 LabelInput{
     spacing: 57px;
+}
+
+FileOpen{
+    background: rgb(0.0 0.0 0.0 0.75);
+    width: 100%;
+    height: 100%;
+}
+
+FileOpen > Widget{
+    align: center middle; // FIXME not working yet
+}
+
+FileOpen > Widget > Content Scrollable{
+    width: 300px;
+    height: 300px;
+}
+
+Scrollbar{
+    width: 5px;
+    background: file(images/scrollbar.png) patch;
+}
+
+Directory{
+    font: name(Bitstream Vera Sans) 10pt rgb(0.62 1.0 0.0) bold;
+}
+
+Directory, File{
+    align: middle;
+}
+
+Directory:hover, File:hover{
+    background: rgb(1.0 0.5 0.0 0.5);
 }
