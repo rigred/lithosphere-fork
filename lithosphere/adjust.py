@@ -10,14 +10,14 @@ from halogen import Area
 from gletools import Sampler2D
 from pyglet.gl import *
 
-from .util import Output, Input, quad, nested, LabelSlider, connect
+from .util import Output, InputSlot, quad, nested, LabelSlider, connect
 from .node import Node
 
 class Adjust(Node):
     def __init__(self, application):
         Node.__init__(self, 'Adjust', application)
         self.inout = Area().append_to(self.column).add_class('inout')
-        self.input = Input(self).append_to(self.inout)
+        self.input = InputSlot(self).append_to(self.inout)
         self.output = Output(self).append_to(self.inout)
         
         self.shader = application.shader('adjust.frag')

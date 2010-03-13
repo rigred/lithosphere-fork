@@ -38,7 +38,7 @@ class LabelCheckbox(Row):
             self.checkbox.uncheck()
     value = property(get_value, set_value)
 
-class Input(Slot):
+class InputSlot(Slot):
     def __init__(self, node):
         Slot.__init__(self)
         self.node = node
@@ -55,11 +55,11 @@ class Input(Slot):
 class LabelInput(Row):
     def __init__(self, title, node):
         Row.__init__(self)
-        self.input = Input(node).append_to(self)
+        self.input = InputSlot(node).append_to(self)
         Label(title).append_to(self)
 
 class Connector(Dropable):
-    target = Input
+    target = InputSlot
     def __init__(self, output):
         self.input = None
         self.output = output

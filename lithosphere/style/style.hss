@@ -102,17 +102,17 @@ Connector:hover{
     background: file(images/dropable_hover.png) image;
 }
 
-Output, Input{
+Output, InputSlot{
     width: 13px;
     height: 13px;
     background: file(images/slot.png) image;
 }
 
-Output:near, Input:near{
+Output:near, InputSlot:near{
     background: file(images/slot_near.png) image;
 }
 
-Input{
+InputSlot{
     left: 0px;
 }
 
@@ -218,18 +218,21 @@ LabelInput{
     spacing: 57px;
 }
 
-FileOpen{
+FileOpen,
+FileSave{
     background: rgb(0.0 0.0 0.0 0.75);
     width: 100%;
     height: 100%;
 }
 
-FileOpen > Widget{
-    align: center middle; // FIXME not working yet
+FileOpen > Widget, 
+FileSave > Widget{
+    align: center middle;
 }
 
-FileOpen > Widget > Content Scrollable{
-    width: 300px;
+FileOpen > Widget > Content Scrollable,
+FileSave > Widget > Content Scrollable{
+    width: 450px;
     height: 300px;
 }
 
@@ -248,4 +251,18 @@ Directory, File{
 
 Directory:hover, File:hover{
     background: rgb(1.0 0.5 0.0 0.5);
+}
+
+Input{
+    background: file(images/input.png) patch;
+    padding: 5px 5px 5px 5px;
+    width: 150px;
+}
+
+Input:focus{
+    background: file(images/input_focus.png) patch;
+}
+
+FileSave Input{
+    width: 350px;
 }

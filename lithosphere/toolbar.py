@@ -31,7 +31,7 @@ class Toolbar(object):
 
         file_col = Column()
         Button('Open').append_to(file_col).on_click = application.file_open.show
-        #Button('Save').append_to(file_col).on_click = application.dialogs.save
+        Button('Save').append_to(file_col).on_click = application.file_save.show
         Button('New').append_to(file_col).on_click = application.empty
 
         self.tabs.add('File', file_col)

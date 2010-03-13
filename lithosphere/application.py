@@ -11,7 +11,7 @@ import pyglet
 import pyglet.gl
 from pyglet.gl import *
 
-from halogen import Root, Area, Workspace, here, Button, FileOpen
+from halogen import Root, Area, Workspace, here, Button, FileOpen, FileSave
 from gletools import Texture, Framebuffer, ShaderProgram, FragmentShader, Viewport, Screen
 
 from .toolbar import Toolbar
@@ -40,8 +40,11 @@ class Application(object):
         
         self.root = Root(self.window, here('style/style.hss'))
 
-        self.file_open = FileOpen(self.root)
+        self.file_open = FileOpen(self.root, pattern=r'.*\.lth$')
         self.file_open.on_file = self.open
+        
+        self.file_save = FileSave(self.root, pattern=r'.*\.lth$')
+        self.file_save.on_file = self.save
 
         self.work_area = Area(id='sidebar').append_to(self.root)
         self.workspace = Workspace().append_to(self.work_area)
@@ -87,7 +90,7 @@ class Application(object):
         self.viewport.pos.xyz = data['viewport']['position']
         self.viewport.rotation.xyz = data['viewport']['rotation']
 
-    def on_save(self, filename):
+    def save(self, filename):
         if os.path.isdir(filename):
             return
         if not filename.endswith('.lth'):

@@ -10,16 +10,16 @@ from halogen import Area
 from pyglet.gl import *
 from gletools import Sampler2D
 
-from .util import Output, Input, quad, nested, connect
+from .util import Output, InputSlot, quad, nested, connect
 from .node import Node
 
 class Mix(Node):
     def __init__(self, application):
         Node.__init__(self, 'Mix', application)
-        self.op1 = Input(self).append_to(self.column)
-        self.op2 = Input(self).append_to(self.column)
+        self.op1 = InputSlot(self).append_to(self.column)
+        self.op2 = InputSlot(self).append_to(self.column)
         inout = Area().append_to(self.column).add_class('inout')
-        self.alpha = Input(self).append_to(inout)
+        self.alpha = InputSlot(self).append_to(inout)
         self.output = Output(self).append_to(inout)
         self.shader = application.shader('mix.frag')
         self.shader.vars.op1 = Sampler2D(GL_TEXTURE0)

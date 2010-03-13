@@ -9,14 +9,14 @@ from halogen import Widget, Column, Area
 from gletools import Sampler2D
 from pyglet.gl import *
 
-from .util import Output, Input, quad, LabelSlider, LabelCheckbox, connect, LabelInput
+from .util import Output, InputSlot, quad, LabelSlider, LabelCheckbox, connect, LabelInput
 from .node import Node
 
 class Base(Node):
     def __init__(self, application):
         Node.__init__(self, self.label, application)
         self.inout = Area().append_to(self.column).add_class('inout')
-        self.input = Input(self).append_to(self.inout)
+        self.input = InputSlot(self).append_to(self.inout)
         self.output = Output(self).append_to(self.inout)
         self.updated = False
         
