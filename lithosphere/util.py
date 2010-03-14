@@ -116,12 +116,6 @@ class Output(Slot):
         for connection in list(self.connections):
             connection.delete()
 
-def quad(top, right, bottom, left):
-    glVertex3f(bottom, right, 0.0)
-    glVertex3f(bottom, left, 0.0)
-    glVertex3f(top, left, 0.0)
-    glVertex3f(top, right, 0.0)
-
 def quad(width, height):
     draw(4, GL_QUADS, 
         ('v2f', (

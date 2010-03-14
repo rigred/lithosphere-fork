@@ -5,6 +5,7 @@
     :license: GNU AGPL v3 or later, see LICENSE for more details.
 """
 from __future__ import with_statement
+from contextlib import nested
 import os, sys, os
 
 import pyglet
@@ -13,7 +14,7 @@ from pyglet.gl import *
 from pyglet.clock import ClockDisplay
 
 from halogen import Root, Area, Workspace, here, Button, FileOpen, FileSave
-from gletools import Texture, Framebuffer, ShaderProgram, FragmentShader, Viewport, Screen
+from gletools import Texture, Framebuffer, ShaderProgram, FragmentShader, Viewport, Screen, Sampler2D
 
 from .toolbar import Toolbar
 from .terrain import Terrain
@@ -21,6 +22,7 @@ from .lines import LineCanvas
 from .viewport import View3d
 from .node_factory import NodeFactory
 from .json_api import dump, load
+from .util import quad
 
 class Application(object):
     def __init__(self):
@@ -48,6 +50,9 @@ class Application(object):
         self.file_save = FileSave(self.root, pattern=r'.*\.lth$')
         self.file_save.on_file = self.save
 
+        self.export_png_dialog = FileSave(self.root, pattern=r'.*\.png$')
+        self.export_png_dialog.on_file = self.export_png
+
         self.work_area = Area(id='sidebar').append_to(self.root)
         self.workspace = Workspace().append_to(self.work_area)
         self.canvas = LineCanvas().append_to(self.workspace)
@@ -61,6 +66,20 @@ class Application(object):
         self.height_reset = self.shader('height_reset.frag')
 
         self.nodes = []
+        self.export_target = Texture(self.width, self.height, format=GL_RGB)
+
+    def export_png(self, filename):
+        if not filename.endswith('.png'):
+            filename += '.png'
+        source = self.terrain.material.source
+        if source:
+            source.texture.unit = GL_TEXTURE0
+            self.framebuffer.textures[0] = self.export_target
+            glColor4f(1.0, 1.0, 1.0, 1.0)
+            with nested(self.processing_view, source.texture, self.framebuffer):
+                quad(self.width, self.height)
+            glFinish()
+            self.export_target.save(filename)
 
     def add_node(self, node):
         self.nodes.append(node)
@@ -95,8 +114,6 @@ class Application(object):
         self.viewport.rotation.xyz = data['viewport']['rotation']
 
     def save(self, filename):
-        if os.path.isdir(filename):
-            return
         if not filename.endswith('.lth'):
             filename += '.lth'
 
@@ -148,7 +165,6 @@ class Application(object):
         #self.fps.draw()
 
     def create_texture(self):
-        #return Texture(self.width, self.height, format=GL_LUMINANCE32F_ARB, clamp='st') #does not seem to work well
         return Texture(self.width, self.height, format=GL_RGBA32F, clamp='st')
 
     def shader(self, *names, **kwargs):

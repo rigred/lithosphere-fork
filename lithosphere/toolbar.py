@@ -33,6 +33,7 @@ class Toolbar(object):
         Button('Open').append_to(file_col).on_click = application.file_open.show
         Button('Save').append_to(file_col).on_click = application.file_save.show
         Button('New').append_to(file_col).on_click = application.empty
+        Button('PNG').append_to(file_col).on_click = application.export_png_dialog.show
 
         self.tabs.add('File', file_col)
         
