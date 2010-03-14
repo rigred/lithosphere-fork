@@ -58,6 +58,27 @@ class LabelInput(Row):
         self.input = InputSlot(node).append_to(self)
         Label(title).append_to(self)
 
+    def get_node(self):
+        return self.input.node
+    def set_node(self, node):
+        self.input.node = node
+    node = property(get_node, set_node)
+
+    def get_source(self):
+        return self.input.source
+    def set_source(self, source):
+        self.input.source = source
+    source = property(get_source, set_source)
+
+    def get_content(self):
+        return self.input.content
+    def set_content(self, content):
+        self.input.content = content 
+    content = property(get_content, set_content)
+
+    def drop(self, connector):
+        self.input.drop(connector)
+
 class Connector(Dropable):
     target = InputSlot
     def __init__(self, output):

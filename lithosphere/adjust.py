@@ -10,7 +10,7 @@ from halogen import Area
 from gletools import Sampler2D
 from pyglet.gl import *
 
-from .util import Output, InputSlot, quad, nested, LabelSlider, connect
+from .util import Output, InputSlot, quad, nested, LabelSlider
 from .node import Node
 
 class Adjust(Node):
@@ -26,65 +26,29 @@ class Adjust(Node):
         self.factor = LabelSlider('Factor', start=0.5).insert_before(self.inout)
         self.offset = LabelSlider('Offset', start=0.5).insert_before(self.inout)
 
-        self.updated = False
-    
-    @property
-    def revision(self):
-        if self.input.source:
-            return hash((self.__class__.__name__,
-                self.factor.value,
-                self.offset.value,
-                self.input.source.revision
-            ))
-        else:
-            return hash((self.__class__.__name__,
-                self.factor.value,
-                self.offset.value
-            ))
-    
-    def get_parameters(self):
-        return dict(
-            factor  = self.factor.value,
-            offset  = self.offset.value,
+        self._parameters = dict(
+            factor = self.factor,
+            offset = self.offset,
         )
-    def set_parameters(self, values):
-        self.factor.value = values['factor']
-        self.offset.value = values['offset']
-
-    parameters = property(get_parameters, set_parameters)
-    del get_parameters, set_parameters
+        self.sources = dict(
+            input = self.input,
+        )
     
-    @property
-    def sources(self):
-        return dict(input=self.input)
+    def compute(self):
+        view = self.application.processing_view
+        input = self.input.source.texture
+        input.unit = GL_TEXTURE0
+        output = self.texture
+        output.unit = GL_TEXTURE0
+        shader = self.shader
 
-    def reconnect(self, data, instances):
-        input_id = data['input']
-        if input_id:
-            node = instances[input_id]
-            connect(node, self.input)
-    
-    def update(self):
-        if self.input.source:
-            self.input.source.update()
-            revision = self.revision
+        shader.vars.factor = (self.factor.value * 2) ** 10
+        shader.vars.offset = (self.offset.value-0.5) * 10
 
-            if revision != self.updated:
-                view = self.application.processing_view
-                input = self.input.source.texture
-                input.unit = GL_TEXTURE0
-                output = self.texture
-                output.unit = GL_TEXTURE0
-                shader = self.shader
-
-                shader.vars.factor = (self.factor.value * 2) ** 10
-                shader.vars.offset = (self.offset.value-0.5) * 10
-
-                fbo = self.application.framebuffer
-                fbo.textures[0] = output
-                with nested(view, fbo, shader, input):
-                    quad(output.width, output.height)
+        fbo = self.application.framebuffer
+        fbo.textures[0] = output
+        with nested(view, fbo, shader, input):
+            quad(output.width, output.height)
                 
-                self.updated = revision
     
 nodes = [Adjust]

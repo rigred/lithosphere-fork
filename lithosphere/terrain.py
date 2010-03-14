@@ -13,6 +13,8 @@ from pyglet.gl import *
 from ctypes import c_float, c_uint
 
 class Terrain(object):
+    id = 'terrain'
+
     def __init__(self, application):
         self.application = application
         self.width, self.height = width, height = application.mesh_width, application.mesh_height
@@ -74,10 +76,16 @@ class Terrain(object):
         offset = data['offset']
         self.widget.rect.x, self.widget.rect.y = offset['x'], offset['y']
         self.widget.layout()
-        input_id = data['source']
+
+        input_id = data['input_height']
         if input_id:
             node = instances[input_id]
             connect(node, self.input_height)
+        
+        material_id = data['material']
+        if material_id:
+            node = instances[material_id]
+            connect(node, self.material)
 
     def reset(self):
         view = self.application.processing_view
@@ -91,12 +99,15 @@ class Terrain(object):
     def update(self):
         view = self.application.processing_view
         revision = self.revision
-        if revision != self.updated:
-            if self.material.source:
-                self.material.source.update()
 
+        if self.material.source:
+            self.material.source.update()
+
+        if self.input_height.source:
+            self.input_height.source.update()
+
+        if revision != self.updated:
             if self.input_height.source:
-                self.input_height.source.update()
                 source = self.input_height.source.texture
                 source.unit = GL_TEXTURE0
                 

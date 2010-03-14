@@ -9,7 +9,7 @@ from halogen import Widget, Column, Area
 from gletools import Sampler2D
 from pyglet.gl import *
 
-from .util import Output, InputSlot, quad, LabelSlider, LabelCheckbox, connect, LabelInput
+from .util import Output, InputSlot, quad, LabelSlider, LabelCheckbox, LabelInput
 from .node import Node
 
 class Base(Node):
@@ -24,47 +24,9 @@ class Base(Node):
         self.shader.vars.texture = Sampler2D(GL_TEXTURE0)
         self.shader.vars.offsets = 1.0/self.texture.width, 1.0/self.texture.height
 
-        self._parameters = dict()
-    
-    @property
-    def revision(self):
-        sources = tuple([input.source.revision if input.source else None for input in self.sources.values()])
-        parameters = tuple((name, param.value) for name, param in self._parameters.items())
-        return hash((self.__class__.__name__, parameters, sources))
-    
-    def get_parameters(self):
-        return dict((name, param.value) for name, param in self._parameters.items())
-    def set_parameters(self, values):
-        for name, value in values.items():
-            self._parameters[name].value = value
-
-    parameters = property(get_parameters, set_parameters)
-    del get_parameters, set_parameters
-    
-    @property
-    def sources(self):
-        return dict(
+        self.sources = dict(
             input = self.input,
         )
-
-    def reconnect(self, data, instances):
-        input_id = data['input']
-        if input_id:
-            node = instances[input_id]
-            connect(node, self.input)
-    
-    def update(self):
-        if self.input.source:
-            self.input.source.update()
-            revision = self.revision
-
-            if revision != self.updated:
-                self.compute()
-                self.updated = revision
-                return True
-
-    def update_shader(self):
-        pass
     
     def compute(self):
         self.update_shader()
@@ -83,30 +45,12 @@ class Repeatable(Base):
         self.last_source_revision = None
         self.shader.vars.texture = Sampler2D(GL_TEXTURE0)
         self.shader.vars.filter_weight = Sampler2D(GL_TEXTURE1)
-    
-    def update(self):
-        if self.input.source:
-            self.input.source.update()
-            if self.weight.input.source:
-                self.weight.input.source.update()
 
-            revision = self.revision
+        self.sources['weight'] = self.weight
 
-            if revision != self.updated:
-                self.compute()
-                self.updated = revision
-                return True
-    
-    def reconnect(self, data, instances):
-        input_id = data['input']
-        if input_id:
-            node = instances[input_id]
-            connect(node, self.input)
-
-        weight_id = data.get('weight')
-        if weight_id:
-            node = instances[weight_id]
-            connect(node, self.weight.input)
+        self._parameters = dict(
+            repeat = self.repeat,
+        )
 
     def compute(self):
         repeat = int(self.repeat.value*100)
@@ -136,13 +80,6 @@ class Repeatable(Base):
         
         self.last_repeat = repeat
         self.last_source_revision = source_revision
-    
-    @property
-    def sources(self):
-        return dict(
-            weight = self.weight.input,
-            input = self.input,
-        )
     
 class Gaussian(Repeatable):
     label = 'Gaussian' 

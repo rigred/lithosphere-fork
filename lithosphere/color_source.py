@@ -20,25 +20,22 @@ class Color(Node):
         self.hue = LabelSlider('Hue', 0.5).insert_before(self.output)
         self.saturdation = LabelSlider('Sat.', 0.5).insert_before(self.output)
         self.lightness = LabelSlider('Light', 0.5).insert_before(self.output)
-        self.updated = False
 
-    def update(self):
+        self._parameters = dict(
+            hue = self.hue,
+            saturdation = self.saturdation,
+            lightness = self.lightness,
+        )
+
+    def compute(self):
         view = self.application.processing_view
-        revision = self.revision
-        if revision != self.updated:
-            fbo = self.application.framebuffer
-            self.texture.unit = GL_TEXTURE0
-            fbo.textures[0] = self.texture
-            color = hsl2rgb(self.hue.value, self.saturdation.value, self.lightness.value)
-            
-            with nested(view, fbo):
-                glColor3f(*color)
-                quad(self.texture.width, self.texture.height)
-
-            self.updated = revision
+        fbo = self.application.framebuffer
+        self.texture.unit = GL_TEXTURE0
+        fbo.textures[0] = self.texture
+        color = hsl2rgb(self.hue.value, self.saturdation.value, self.lightness.value)
         
-    @property
-    def revision(self):
-        return hash((self.hue.value, self.saturdation.value, self.lightness.value))
+        with nested(view, fbo):
+            glColor3f(*color)
+            quad(self.texture.width, self.texture.height)
 
 nodes = [Color]

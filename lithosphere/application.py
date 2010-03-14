@@ -10,6 +10,7 @@ import os, sys, os
 import pyglet
 import pyglet.gl
 from pyglet.gl import *
+from pyglet.clock import ClockDisplay
 
 from halogen import Root, Area, Workspace, here, Button, FileOpen, FileSave
 from gletools import Texture, Framebuffer, ShaderProgram, FragmentShader, Viewport, Screen
@@ -23,6 +24,7 @@ from .json_api import dump, load
 
 class Application(object):
     def __init__(self):
+        self.fps = ClockDisplay()
         self.mesh_width = 512
         self.mesh_height = 512
 
@@ -75,7 +77,9 @@ class Application(object):
         instances = dict()
         nodes_data = dict()
         for id, node_data in data['nodes'].items():
-            instances[id] = self.node_factory.create(node_data)
+            instance = self.node_factory.create(node_data)
+            instance.id = id
+            instances[id] = instance
             nodes_data[id] = node_data
 
         for id, instance in instances.items():
@@ -105,22 +109,22 @@ class Application(object):
         
         data['nodes'] = nodes = dict()
         for node in self.nodes:
-            nodes[id(node)] = dict(
+            nodes[node.id] = dict(
                 type = node.__class__.__name__,
                 offset = dict(x=node.widget.rect.x, y=node.widget.rect.y),
                 parameters = node.parameters,
                 sources = dict(
-                    (name, (str(id(slot.source)) if slot.source else None))
+                    (name, (slot.source.id if slot.source else None))
                     for name, slot in node.sources.items()
                 )
             )
 
         terrain = self.terrain
-        if terrain:
-            data['terrain'] = dict(
-                offset = dict(x=terrain.widget.rect.x, y = terrain.widget.rect.y),
-                source = str(id(terrain.input.source)) if terrain.input.source else None
-            )
+        data['terrain'] = dict(
+            offset = dict(x=terrain.widget.rect.x, y = terrain.widget.rect.y),
+            input_height = terrain.input_height.source.id if terrain.input_height.source else None,
+            material = terrain.material.source.id if terrain.material.source else None,
+        )
 
         data['workspace'] = dict(
             offset = dict(x=self.workspace.xoff, y=self.workspace.yoff)
@@ -141,9 +145,10 @@ class Application(object):
         self.window.clear()
         self.viewport.draw_terrain()
         self.root.draw()
+        #self.fps.draw()
 
     def create_texture(self):
-        #return Texture(self.width, self.height, format=GL_LUMINANCE32F_ARB, clamp='st')
+        #return Texture(self.width, self.height, format=GL_LUMINANCE32F_ARB, clamp='st') #does not seem to work well
         return Texture(self.width, self.height, format=GL_RGBA32F, clamp='st')
 
     def shader(self, *names, **kwargs):
