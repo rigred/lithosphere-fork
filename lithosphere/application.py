@@ -58,6 +58,10 @@ class Application(object):
         self.canvas = LineCanvas().append_to(self.workspace)
         self.processing_view = Screen(0, 0, self.width, self.height)
         self.terrain = Terrain(self)
+        
+        self.export_obj_dialog = FileSave(self.root, pattern=r'.*\.obj$')
+        self.export_obj_dialog.on_file = self.terrain.export_obj
+
         self.viewport = View3d(self).append_to(self.root)
         self.toolbar = Toolbar(self)
         self.node_factory = NodeFactory(self)
