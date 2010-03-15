@@ -7,7 +7,7 @@ uniform float factor, offset;
 
 void main(void){
     vec2 pos = gl_TexCoord[0].st;
-    float value = texture2D(texture, pos).r;
+    vec4 value = texture2D(texture, pos);
     value = value * factor + offset;
-    gl_FragColor = vec4(value);
+    gl_FragColor = value;
 }

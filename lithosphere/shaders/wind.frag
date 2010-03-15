@@ -9,7 +9,7 @@ const float pi = 3.14159265358979323846264;
 uniform float direction, strengh, strengh2, x;
 
 vec3 get(vec2 uv){
-    float height = texture2D(texture, vec2(uv));
+    float height = texture2D(texture, vec2(uv)).r;
     return vec3(uv.s, height, uv.t);
 }
 

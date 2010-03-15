@@ -141,6 +141,7 @@ const vec3 L22  = vec3(-0.2858534, -0.3235718, -0.3586478);
 
 uniform sampler2D normal_map;
 uniform sampler2D material;
+const float gamma = 1.0/1.8;
 
 void main(){
     if(gl_FrontFacing){
@@ -165,7 +166,7 @@ void main(){
 
         diffuse *= color;
         
-        gl_FragColor = vec4(diffuse, gl_Color.w);
+        gl_FragColor = vec4(pow(diffuse, gamma), gl_Color.w);
         //gl_FragColor = vec4(normal.xyz, 1.0);
     }
     else{

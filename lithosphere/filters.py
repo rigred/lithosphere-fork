@@ -27,6 +27,9 @@ class Base(Node):
         self.sources = dict(
             input = self.input,
         )
+
+    def update_shader(self):
+        pass
     
     def compute(self):
         self.update_shader()

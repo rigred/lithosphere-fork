@@ -10,8 +10,8 @@ const float a = 1.0/36.0;
 const float b = 4.0/36.0;
 const float c = 16.0/36.0;
 
-float get(float s, float t){
-    return texture2D(texture, vec2(s, t)).r;
+vec4 get(float s, float t){
+    return texture2D(texture, vec2(s, t));
 }
 
 void main(void){
@@ -20,13 +20,13 @@ void main(void){
     float t=uv.t;
     float x=offsets.x;
     float y=offsets.y;
-    float pos = get(uv.s, uv.t);
-    float weight = texture2D(filter_weight, uv);
-    float result = (
+    vec4 pos = get(uv.s, uv.t);
+    vec4 weight = texture2D(filter_weight, uv);
+    vec4 result = (
         a*get(uv.s-x, uv.t-y) + b*get(uv.s  , uv.t-y) + a*get(uv.s+x, uv.t-y) +
         b*get(uv.s-x, uv.t  ) + c*pos                 + b*get(uv.s+x, uv.t  ) +
         a*get(uv.s-x, uv.t+y) + b*get(uv.s  , uv.t+y) + a*get(uv.s+x, uv.t+y)
     );
     result = mix(result, pos, clamp(weight, 0.0, 1.0));
-    gl_FragColor = vec4(result);
+    gl_FragColor = result;
 }

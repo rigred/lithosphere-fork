@@ -35,7 +35,7 @@ class Application(object):
         self.shaders = {}
 
         self.framebuffer = Framebuffer()
-        self.window = pyglet.window.Window(fullscreen=True, resizable=True)
+        self.window = pyglet.window.Window(fullscreen=True, resizable=True, vsync=False)
         self.window.push_handlers(self)
         
         font_dir = here('style/fonts')
@@ -69,6 +69,7 @@ class Application(object):
         self.toolbar = Toolbar(self)
         self.node_factory = NodeFactory(self)
         pyglet.clock.schedule_interval(self.update, 0.05)
+        pyglet.clock.schedule(lambda delta: None) #DEBUG
         self.temp = self.create_texture()
         self.height_reset = self.shader('height_reset.frag')
 
