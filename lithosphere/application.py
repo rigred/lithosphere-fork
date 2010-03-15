@@ -61,6 +61,9 @@ class Application(object):
         
         self.export_obj_dialog = FileSave(self.root, pattern=r'.*\.obj$')
         self.export_obj_dialog.on_file = self.terrain.export_obj
+        
+        self.export_heights_dialog = FileSave(self.root, pattern=r'.*\.farr$')
+        self.export_heights_dialog.on_file = self.terrain.export_float_array
 
         self.viewport = View3d(self).append_to(self.root)
         self.toolbar = Toolbar(self)

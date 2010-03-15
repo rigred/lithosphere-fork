@@ -84,6 +84,17 @@ class Terrain(object):
                             p1+1, p1+1, p1+1, p3+1, p3+1, p3+1, p4+1, p4+1, p4+1
                         ))
 
+    def export_float_array(self, filename):
+        if not filename.endswith('.farr'):
+            filename += '.farr'
+
+        if self.input_height.source:
+            heightmap = self.input_height.source.texture
+            heightmap.retrieve()
+            string = string_at(heightmap.buffer, heightmap.width*heightmap.height*4)
+            with open(filename, 'wb') as outfile:
+                outfile.write(string)
+
     def generate_vbo(self, width, height):
         #as an acceleration the arrays could be prefilled in C
 

@@ -5,7 +5,7 @@
     :license: GNU AGPL v3 or later, see LICENSE for more details.
 """
 
-from halogen import Column, Row, Button, Node, Tabs
+from halogen import Column, Row, Button, Node, Tabs, Label
 
 class Category(Row):
     def __init__(self, application):
@@ -29,14 +29,18 @@ class Toolbar(object):
         self.application = application
         self.tabs = Tabs(id='toolbar').append_to(application.viewport)
 
-        file_col = Column()
-        Button('Open').append_to(file_col).on_click = application.file_open.show
-        Button('Save').append_to(file_col).on_click = application.file_save.show
-        Button('New').append_to(file_col).on_click = application.empty
-        Button('PNG').append_to(file_col).on_click = application.export_png_dialog.show
-        Button('Obj').append_to(file_col).on_click = application.export_obj_dialog.show
+        row = Row(id="file")
+        col1 = Column().append_to(row)
+        col2 = Column().append_to(row)
+        Button('Open').append_to(col1).on_click = application.file_open.show
+        Button('Save').append_to(col1).on_click = application.file_save.show
+        Button('New').append_to(col1).on_click = application.empty
+        Label('Export').append_to(col2)
+        Button('Heighs').append_to(col2).on_click = application.export_heights_dialog.show
+        Button('Material').append_to(col2).on_click = application.export_png_dialog.show
+        Button('Obj').append_to(col2).on_click = application.export_obj_dialog.show
 
-        self.tabs.add('File', file_col)
+        self.tabs.add('File', row)
         
         self.sources = Category(application)
         self.tabs.add('Src', self.sources)
