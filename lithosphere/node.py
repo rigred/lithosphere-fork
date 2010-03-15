@@ -43,6 +43,14 @@ class Node(object):
     parameters = property(get_parameters, set_parameters)
     del get_parameters, set_parameters
 
+    @property
+    def branch_nodes(self):
+        nodes = set([self])
+        for input in self.sources.values():
+            if input.source:
+                nodes |= input.source.branch_nodes
+        return nodes
+
     def update_sources(self):
         for input in self.sources.values():
             if input.source:

@@ -90,6 +90,11 @@ class Connector(Dropable):
         self.canvas.add(self)
         Dropable.__init__(self, layer=application.workspace)
 
+    def find_slots(self):
+        slots = Dropable.find_slots(self)
+        nodes = self.output.node.branch_nodes
+        return [slot for slot in slots if slot.node not in nodes]
+
     def on_drop(self, slot):
         if not self.output.content:
             self.output.content = Connector(self.output)
