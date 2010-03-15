@@ -59,11 +59,6 @@ class Terrain(object):
                 for iz, z in heights:
                     for ix, x in widths:
                         outfile.write('v %f %f %f\n' % (x, heightmap[ix, iz][0], z))
-                '''
-                self.vertex_texture.retrieve()
-                for vertex in self.vertex_texture:
-                    outfile.write('v %f %f %f\n' % tuple(vertex[:3]))
-                '''
 
                 self.normal_texture.retrieve()
                 for normal in self.normal_texture:
@@ -78,16 +73,15 @@ class Terrain(object):
                 i_width, i_height = width-1, height-1
                 for z in range(i_height):
                     for x in range(i_width):
-                        offset = (x+z*i_width)*6
                         p1 = x+z*width
                         p2 = p1+width
                         p4 = p1+1
                         p3 = p2+1
                         outfile.write('f %i/%i/%i %i/%i/%i %i/%i/%i\n' % (
-                            p1, p1, p1, p2, p2, p2, p3, p3, p3
+                            p1+1, p1+1, p1+1, p2+1, p2+1, p2+1, p3+1, p3+1, p3+1
                         ))
                         outfile.write('f %i/%i/%i %i/%i/%i %i/%i/%i\n' % (
-                            p1, p1, p1, p3, p3, p3, p4, p4, p4
+                            p1+1, p1+1, p1+1, p3+1, p3+1, p3+1, p4+1, p4+1, p4+1
                         ))
 
     def generate_vbo(self, width, height):
