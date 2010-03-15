@@ -157,7 +157,7 @@ class Terrain(object):
             self.input_height.source.update()
 
         if revision != self.updated:
-            if self.input_height.source:
+            if self.input_height.source and self.input_height.source.complete:
                 source = self.input_height.source.texture
                 source.unit = GL_TEXTURE0
                 
@@ -192,7 +192,7 @@ class Terrain(object):
         glTranslatef(-0.5, 0, -0.5)
         self.normal_texture.unit = GL_TEXTURE0
 
-        if self.material.source:
+        if self.material.source and self.material.source.complete:
             self.material.source.texture.unit = GL_TEXTURE1
             with nested(self.normal_texture, self.material.source.texture):
                 self.vbo.draw(GL_TRIANGLES)

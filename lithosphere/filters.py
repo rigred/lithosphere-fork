@@ -52,6 +52,8 @@ class Repeatable(Base):
             repeat = self.repeat,
         )
 
+        self.optional = ['weight']
+
     def compute(self):
         repeat = int(self.repeat.value*100)
         source_revision = self.input.source.revision

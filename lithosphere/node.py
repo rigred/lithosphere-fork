@@ -26,6 +26,7 @@ class Node(object):
         self._parameters = {}
         self.sources = {}
         self.updated = None
+        self.optional = []
     
     @property
     def revision(self):
@@ -47,12 +48,26 @@ class Node(object):
             if input.source:
                 input.source.update()
 
+    @property
+    def complete(self):
+        for name, input in self.sources.items():
+            if name in self.optional:
+                continue
+            else:
+                if input.source and input.source.complete:
+                    continue 
+                else:
+                    return False
+
+        return True
+
     def update(self):
-        revision = self.revision
-        self.update_sources()
-        if revision != self.updated:
-            self.compute()
-        self.updated = revision 
+        if self.complete:
+            revision = self.revision
+            self.update_sources()
+            if revision != self.updated:
+                self.compute()
+            self.updated = revision 
     
     def reconnect(self, data, instances):
         for name, id in data.items():
