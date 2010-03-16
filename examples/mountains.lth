@@ -1,0 +1,232 @@
+{
+    "nodes": {
+        "2442f7559bd2e7ad18311d8d841b3e28": {
+            "offset": {
+                "x": 455, 
+                "y": 235
+            }, 
+            "parameters": {
+                "invert": false, 
+                "repeat": 0.71681818181818202, 
+                "rough": true, 
+                "shallow": false, 
+                "slope": true
+            }, 
+            "sources": {
+                "input": "3cd3c6b26390ac58b4ece1115ec696ba", 
+                "weight": "80ddd1e4fc8beb7fff45f2ae5c2dbdd5"
+            }, 
+            "type": "Erode"
+        }, 
+        "3914c239bca90befa16f29a902aac4d8": {
+            "offset": {
+                "x": 475, 
+                "y": -132
+            }, 
+            "parameters": {
+                "falloff": 0.0, 
+                "height": 1.0, 
+                "octaves": 0.57954545454545492, 
+                "offset": 0.0, 
+                "size": 0.33931818181817891, 
+                "step": 0.80000000000000004
+            }, 
+            "sources": {}, 
+            "type": "Simplex"
+        }, 
+        "3cd3c6b26390ac58b4ece1115ec696ba": {
+            "offset": {
+                "x": 204, 
+                "y": 89
+            }, 
+            "parameters": {
+                "falloff": 0.19045454545454621, 
+                "height": 0.53090909090909288, 
+                "octaves": 0.070681818181818387, 
+                "offset": 0.0, 
+                "size": 0.10000000000000001, 
+                "step": 0.80000000000000004
+            }, 
+            "sources": {}, 
+            "type": "Simplex"
+        }, 
+        "45bad867036d6c65f3a3b556a8c0d7b0": {
+            "offset": {
+                "x": 1253, 
+                "y": 109
+            }, 
+            "parameters": {}, 
+            "sources": {
+                "alpha": "f3e65160f6c6e8295dd81ef2b33c63c7", 
+                "op1": "6897219d0fe13de91185a26e04ffa1b9", 
+                "op2": "93a9c5ca7da081e242616d5f721112c4"
+            }, 
+            "type": "Mix"
+        }, 
+        "63b0147d0139ffcf8192301e371cf67d": {
+            "offset": {
+                "x": 1231, 
+                "y": -16
+            }, 
+            "parameters": {}, 
+            "sources": {
+                "alpha": "f03c9bc075c404291832ae5b93213e01", 
+                "op1": "f0e2438c92390166575b45f3527716a3", 
+                "op2": "45bad867036d6c65f3a3b556a8c0d7b0"
+            }, 
+            "type": "Mix"
+        }, 
+        "6897219d0fe13de91185a26e04ffa1b9": {
+            "offset": {
+                "x": 1484, 
+                "y": -118
+            }, 
+            "parameters": {
+                "hue": 0.5, 
+                "lightness": 0.2409090909090858, 
+                "saturdation": 0.0
+            }, 
+            "sources": {}, 
+            "type": "Color"
+        }, 
+        "79a036135754924b07f4f85db7c481cd": {
+            "offset": {
+                "x": 473, 
+                "y": 48
+            }, 
+            "parameters": {
+                "falloff": 0.17522727272727212, 
+                "height": 1.0, 
+                "octaves": 0.057500000000000044, 
+                "offset": 0.76136363636363624, 
+                "size": 0.045681818181818226, 
+                "step": 0.80000000000000004
+            }, 
+            "sources": {}, 
+            "type": "Simplex"
+        }, 
+        "80ddd1e4fc8beb7fff45f2ae5c2dbdd5": {
+            "offset": {
+                "x": 209, 
+                "y": 288
+            }, 
+            "parameters": {
+                "falloff": 0.0, 
+                "height": 0.75886363636363108, 
+                "octaves": 0.22590909090909059, 
+                "offset": 0.0, 
+                "size": 0.25727272727272693, 
+                "step": 0.80000000000000004
+            }, 
+            "sources": {}, 
+            "type": "Simplex"
+        }, 
+        "93a9c5ca7da081e242616d5f721112c4": {
+            "offset": {
+                "x": 1229, 
+                "y": -146
+            }, 
+            "parameters": {
+                "hue": 0.12613636363636299, 
+                "lightness": 0.29272727272727267, 
+                "saturdation": 0.048181818181818208
+            }, 
+            "sources": {}, 
+            "type": "Color"
+        }, 
+        "cb64adee9720b7b5fcb323cfbd16f2ab": {
+            "offset": {
+                "x": 762, 
+                "y": 308
+            }, 
+            "parameters": {}, 
+            "sources": {
+                "op1": "2442f7559bd2e7ad18311d8d841b3e28", 
+                "op2": "79a036135754924b07f4f85db7c481cd"
+            }, 
+            "type": "Multiply"
+        }, 
+        "f002bb7e220141b9db7846dee7d32576": {
+            "offset": {
+                "x": 675, 
+                "y": -57
+            }, 
+            "parameters": {
+                "hue": 0.52522727272726522, 
+                "lightness": 0.16909090909090738, 
+                "saturdation": 0.023636363636363636
+            }, 
+            "sources": {}, 
+            "type": "Color"
+        }, 
+        "f03c9bc075c404291832ae5b93213e01": {
+            "offset": {
+                "x": 873, 
+                "y": 135
+            }, 
+            "parameters": {
+                "factor": 0.56181818181818377, 
+                "invert": false, 
+                "offset": 0.28227272727272396
+            }, 
+            "sources": {
+                "input": "cb64adee9720b7b5fcb323cfbd16f2ab"
+            }, 
+            "type": "Incline"
+        }, 
+        "f0e2438c92390166575b45f3527716a3": {
+            "offset": {
+                "x": 945, 
+                "y": -80
+            }, 
+            "parameters": {}, 
+            "sources": {
+                "op1": "f002bb7e220141b9db7846dee7d32576", 
+                "op2": "3914c239bca90befa16f29a902aac4d8"
+            }, 
+            "type": "Multiply"
+        }, 
+        "f3e65160f6c6e8295dd81ef2b33c63c7": {
+            "offset": {
+                "x": 1521, 
+                "y": 27
+            }, 
+            "parameters": {
+                "falloff": 0.022045454545454743, 
+                "height": 0.81727272727272771, 
+                "octaves": 0.51795454545454633, 
+                "offset": 0.0, 
+                "size": 0.28068181818181986, 
+                "step": 0.67590909090909079
+            }, 
+            "sources": {}, 
+            "type": "Simplex"
+        }
+    }, 
+    "terrain": {
+        "input_height": "cb64adee9720b7b5fcb323cfbd16f2ab", 
+        "material": "63b0147d0139ffcf8192301e371cf67d", 
+        "offset": {
+            "x": 1400, 
+            "y": 217
+        }
+    }, 
+    "viewport": {
+        "position": [
+            -0.45190748314130708, 
+            0.39073450761890011, 
+            0.50052537437363853
+        ], 
+        "rotation": [
+            -3.8607000000000244, 
+            0.0, 
+            0.54499999999999993
+        ]
+    }, 
+    "workspace": {
+        "offset": {
+            "x": -172, 
+            "y": 153
+        }
+    }
+}
