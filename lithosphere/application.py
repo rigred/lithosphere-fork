@@ -13,7 +13,7 @@ import pyglet.gl
 from pyglet.gl import *
 from pyglet.clock import ClockDisplay
 
-from halogen import Root, Area, Workspace, here, Button, FileOpen, FileSave
+from halogen import Root, Area, Workspace, here, Button, FileOpen, FileSave, res_open, res_listdir
 from gletools import Texture, Framebuffer, ShaderProgram, FragmentShader, Viewport, Screen, Sampler2D
 
 from .toolbar import Toolbar
@@ -39,8 +39,9 @@ class Application(object):
         self.window.push_handlers(self)
         
         font_dir = here('style/fonts')
-        for name in os.listdir(here('style/fonts')):
-            pyglet.font.add_file(os.path.join(font_dir, name))
+        for name in res_listdir(here('style/fonts')):
+            font_path = os.path.join(font_dir, name)
+            pyglet.font.add_file(res_open(font_path))
         
         self.root = Root(self.window, here('style/style.hss'))
 
@@ -180,9 +181,9 @@ class Application(object):
             return self.shaders[names]
         else:
             shader = ShaderProgram(*[
-                FragmentShader.open(here('shaders/%s' % name))
+                FragmentShader.open(res_open(here('shaders/%s' % name)))
                 if name.endswith('.frag') else
-                VertexShader.open(here('shaders/%s' % name))
+                VertexShader.open(res_open(here('shaders/%s' % name)))
                 for name in names
             ], **kwargs)
             self.shaders[names] = shader

@@ -6,7 +6,7 @@
 """
 from __future__ import with_statement
 
-from halogen import Node, here, Area
+from halogen import Node, here, Area, res_open
 from gletools import Projection, ShaderProgram, VertexShader, FragmentShader, DepthTest, Sampler2D
 from pyglet.gl import *
 from pyglet.window.key import S, D, F, E, W, R, LSHIFT
@@ -47,8 +47,8 @@ class View3d(Area):
     
     def load_lighting(self, name, **kwargs):
         return ShaderProgram(
-            VertexShader.open(here('shaders/lighting/default.vert')),
-            FragmentShader.open(here('shaders/lighting/%s' % name)),
+            VertexShader.open(res_open(here('shaders/lighting/default.vert'))),
+            FragmentShader.open(res_open(here('shaders/lighting/%s' % name))),
             **kwargs
         )
 
