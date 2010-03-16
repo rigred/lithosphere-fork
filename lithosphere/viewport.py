@@ -81,7 +81,7 @@ class View3d(Area):
 
     def getaxis(self, key1, key2):
         value = 0.0
-        factor = 0.2 if self.root.keys[LSHIFT] else 1.0
+        factor = 0.05 if self.root.keys[LSHIFT] else 1.0
         if self.root.keys[key1]:
             value -= factor
         if self.root.keys[key2]:
