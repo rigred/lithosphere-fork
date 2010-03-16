@@ -3,28 +3,33 @@ rm lithosphere.tgz
 mkdir lithosphere
 
 cd ../../gletools
+rm dist/*.egg
 python setup.py bdist_egg
-cp dist/gletools-0.1.0-py2.6.egg $here/lithosphere
+cp dist/gletools*.egg $here/lithosphere
 cd $here
 
 cd ../../halogen
+rm dist/*.egg
 python setup.py bdist_egg
-cp dist/halogen-0.1.0-py2.6.egg $here/lithosphere
+cp dist/halogen*.egg $here/lithosphere
 cd $here
 
 cd ../../pyglet
+rm dist/*.egg
 python setup.py bdist_egg
-cp dist/pyglet-1.2dev-py2.6.egg $here/lithosphere
+cp dist/pyglet*.egg $here/lithosphere
 cd $here
 
 cd ../../setuptools-0.6c11
+rm dist/*.egg
 python setup.py bdist_egg
-cp dist/setuptools-0.6c11-py2.6.egg $here/lithosphere
+cp dist/setuptools*.egg $here/lithosphere
 cd $here
 
 cd ..
+rm dist/*.egg
 python setup.py bdist_egg
-cp dist/lithosphere-0.1.0-py2.6.egg $here/lithosphere
+cp dist/lithosphere*.egg $here/lithosphere
 cd $here
 
 cp run_standalone.py lithosphere/run.py
