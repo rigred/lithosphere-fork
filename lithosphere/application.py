@@ -6,6 +6,7 @@
 """
 from __future__ import with_statement
 from contextlib import nested
+from json import dump, load
 import os, sys, os
 
 import pyglet
@@ -21,7 +22,6 @@ from .terrain import Terrain
 from .lines import LineCanvas
 from .viewport import View3d
 from .node_factory import NodeFactory
-from .json_api import dump, load
 from .util import quad
 
 class Application(object):
@@ -193,6 +193,11 @@ class Application(object):
         self.terrain.update()
 
 def main():
+    major, minor = sys.version_info[:2]
+    if major < 2 or minor < 6:
+        print 'python 2.6 or above is required, you have: %s' % sys.version
+        sys.exit(-1)
+
     application = Application()
     if len(sys.argv) > 1:
         path = sys.argv[1]
