@@ -9,4 +9,5 @@ Non blocking Issues with configurations:
 
 Known not working configurations:
     Intel Corporation Mobile GM965/GL960 Integrated Graphics Controller (rev 0c) (no support for GL_RGBA32F)
+    Nvidia gForce 7700 (too slow)
     Macbook air first generation

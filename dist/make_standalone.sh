@@ -1,5 +1,6 @@
 here=`pwd`
 rm lithosphere.tgz
+rm lithosphere.zip
 mkdir lithosphere
 
 cd ../../gletools
@@ -35,5 +36,6 @@ cd $here
 cp run_standalone.py lithosphere/run.py
 
 tar czvf lithosphere.tgz lithosphere
+zip lithosphere.zip -R lithosphere/*
 rm -rf lithosphere
 rm *.egg
