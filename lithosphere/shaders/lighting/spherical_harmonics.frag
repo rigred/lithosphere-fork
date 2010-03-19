@@ -166,7 +166,7 @@ void main(){
 
         diffuse *= color;
         
-        gl_FragColor = vec4(pow(diffuse, vec4(gamma)), gl_Color.w);
+        gl_FragColor = vec4(pow(diffuse, vec3(gamma)), gl_Color.w);
     }
     else{
         gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
