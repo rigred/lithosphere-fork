@@ -10,7 +10,7 @@ from halogen import Area
 from gletools import Sampler2D
 from pyglet.gl import *
 
-from .util import Output, InputSlot, quad, nested, LabelSlider
+from .util import Output, InputSlot, quad, nested, LabelSlider, LabelCheckbox
 from .node import Node
 
 class Adjust(Node):
@@ -23,12 +23,16 @@ class Adjust(Node):
         self.shader = application.shader('adjust.frag')
         self.shader.vars.texture = Sampler2D(GL_TEXTURE0)
         
+        self.invert = LabelCheckbox('Invert').insert_before(self.inout)
+        self.clamp = LabelCheckbox('Clamp').insert_before(self.inout)
         self.factor = LabelSlider('Factor', start=0.5).insert_before(self.inout)
         self.offset = LabelSlider('Offset', start=0.5).insert_before(self.inout)
 
         self._parameters = dict(
             factor = self.factor,
             offset = self.offset,
+            clamp = self.clamp,
+            invert = self.invert,
         )
         self.sources = dict(
             input = self.input,
@@ -44,6 +48,8 @@ class Adjust(Node):
 
         shader.vars.factor = (self.factor.value * 2) ** 10
         shader.vars.offset = (self.offset.value-0.5) * 10
+        shader.vars.invert = self.invert.value
+        shader.vars.do_clamp = self.clamp.value
 
         fbo = self.application.framebuffer
         fbo.textures[0] = output
