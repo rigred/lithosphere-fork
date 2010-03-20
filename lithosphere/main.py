@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, traceback
 from pyglet.gl import *
 import pyglet
 from halogen import Root, here, res_open, res_listdir, Label, Widget, Column, Button
