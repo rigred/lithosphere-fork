@@ -83,10 +83,11 @@ def main():
                 path = sys.argv[1]
                 if os.path.exists(path):
                     application.open(path)
+            application.run()
         except:
             traceback.print_exc()
             sys.exit(-1)
     else:
         application = InfoApp(window)
         application.message('Compatibility', message)
-    application.run()
+        application.run()
