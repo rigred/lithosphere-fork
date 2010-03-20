@@ -26,7 +26,10 @@ from .node_factory import NodeFactory
 from .util import quad
 
 class Application(object):
-    def __init__(self):
+    def __init__(self, window):
+        self.window = window
+        window.set_fullscreen(True)
+
         self.fps = ClockDisplay()
         self.mesh_width = 512
         self.mesh_height = 512
@@ -36,7 +39,6 @@ class Application(object):
         self.shaders = {}
 
         self.framebuffer = Framebuffer()
-        self.window = pyglet.window.Window(fullscreen=True, resizable=True, vsync=False)
         self.window.push_handlers(self)
         
         font_dir = here('style/fonts')
@@ -192,25 +194,3 @@ class Application(object):
 
     def update(self, delta):
         self.terrain.update()
-
-def main():
-    major, minor = sys.version_info[:2]
-    if major < 2 or minor < 6:
-        print 'python 2.6 or above is required, you have: %s' % sys.version
-        sys.exit(-1)
-
-    glsl_version = string_at(glGetString(GL_SHADING_LANGUAGE_VERSION))
-    glsl_major, glsl_minor = map(int, glsl_version.split('.'))
-    if glsl_major == 1:
-        if glsl_minor < 30:
-            print 'OpenGL shading language version 1.30 or above is required, you have: %s' % glsl_version
-            sys.exit(-1)
-    elif glsl_major > 1:
-        pass
-
-    application = Application()
-    if len(sys.argv) > 1:
-        path = sys.argv[1]
-        if os.path.exists(path):
-            application.open(path)
-    application.run()

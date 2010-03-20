@@ -7,5 +7,5 @@ if __name__ == '__main__':
         if name.endswith('.egg'):
             sys.path.insert(0, os.path.join(here, name))
 
-    from lithosphere import main
+    from lithosphere.main import main
     main()

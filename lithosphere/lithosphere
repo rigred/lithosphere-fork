@@ -7,5 +7,5 @@
 """
 
 if __name__ == '__main__':
-    from lithosphere import main
+    from lithosphere.main import main
     main()

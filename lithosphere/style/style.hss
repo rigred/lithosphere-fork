@@ -226,7 +226,8 @@ FileSave{
 }
 
 FileOpen > Widget, 
-FileSave > Widget{
+FileSave > Widget,
+Widget.message{
     align: center middle;
 }
 
