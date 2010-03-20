@@ -35,9 +35,7 @@ float noise(vec2 value){
     vec2 xy2 = xy0 - 1.0 + 2.0 * G2;
    
     int ii = i&255;
-    //int ii = int(frac(float(i)/256.0)*256.0);
     int jj = j&255;
-    //int jj = int(frac(float(j)/256.0)*256.0);
 
     int gi0 = modulo(perm(ii+perm(jj)), 12);
     int gi1 = modulo(perm(ii+i1+perm(jj+j1)), 12);

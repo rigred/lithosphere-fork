@@ -9,6 +9,7 @@ from contextlib import nested
 from json import dump, load
 import os, sys, os
 
+from ctypes import string_at
 import pyglet
 import pyglet.gl
 from pyglet.gl import *
@@ -197,6 +198,15 @@ def main():
     if major < 2 or minor < 6:
         print 'python 2.6 or above is required, you have: %s' % sys.version
         sys.exit(-1)
+
+    glsl_version = string_at(glGetString(GL_SHADING_LANGUAGE_VERSION))
+    glsl_major, glsl_minor = map(int, glsl_version.split('.'))
+    if glsl_major == 1:
+        if glsl_minor < 30:
+            print 'OpenGL shading language version 1.30 or above is required, you have: %s' % glsl_version
+            sys.exit(-1)
+    elif glsl_major > 1:
+        pass
 
     application = Application()
     if len(sys.argv) > 1:
