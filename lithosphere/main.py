@@ -25,15 +25,16 @@ def check_glsl():
 
 def check_extension(name):
     global message, run
-    if not gl_info.have_extension(name):
-        message += '- %s not available\n' % name
-        run = False
+    if not gl_info.have_extension('GL_ARB_' + name):
+        if not gl_info.have_extension('GL_EXT_' + name):
+            message += '- opengl extension %s not available\n' % name
+            run = False
 
 def check_extensions():
-    check_extension('GL_ARB_texture_float')
-    check_extension('GL_ARB_pixel_buffer_object')
-    check_extension('GL_ARB_vertex_buffer_object')
-    check_extension('GL_ARB_framebuffer_object')
+    check_extension('texture_float')
+    check_extension('pixel_buffer_object')
+    check_extension('vertex_buffer_object')
+    check_extension('framebuffer_object')
 
 def check_compatibility():
     check_python() 
