@@ -1,6 +1,6 @@
-## This is a fork of https://bitbucket.org/pyalot/lithosphere/
-  Credit goes to the Original Creator Florian Bösch
-  The associated website can be found here http://lithosphere.codeflow.org/
+ > This is a fork of https://bitbucket.org/pyalot/lithosphere/
+ > Credit goes to the Original Creator [Florian Bösch](https://github.com/pyalot)
+ > The associated website can be found here http://lithosphere.codeflow.org/
   
 Lithosphere is a GPU driven terrain generator. It allows you to create and export material textures and heightmaps intended for use in realtime graphics applications.
 
