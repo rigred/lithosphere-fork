@@ -10,7 +10,7 @@ In order to use the 3d viewport, you have to click into it to focus. It gets an 
 
 ## Sliders
 
-## The sliders you find in lithosphere can be very sensitive. If you want to slow down the rate of change of a slider, you can hold [Right Shift] while you modify it. Sliders can be modified in these three ways:
+The sliders you find in lithosphere can be very sensitive. If you want to slow down the rate of change of a slider, you can hold [Right Shift] while you modify it. Sliders can be modified in these three ways:
 
  * Drag them with the mouse
  * If a slider is focused (glows orange) use the mouse scroll wheel to change it
