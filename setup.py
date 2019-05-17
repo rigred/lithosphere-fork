@@ -40,6 +40,7 @@ setup(
     packages                = ['lithosphere'],
     scripts                 = ['lithosphere/lithosphere'],
     install_requires        = ['setuptools', 'pyglet', 'halogen', 'gletools'],
+    dependency_links        = ['http://github.com/adamlwgriffiths/GLETools/tarball/master#egg=gletools'],
     platforms               = ['any'],
     app                     = ['lithosphere/app.py'],
 )
